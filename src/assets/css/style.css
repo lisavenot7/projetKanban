@@ -1,0 +1,138 @@
+* {
+    box-sizing: border-box;
+}
+  
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0F171E;
+}
+
+.home {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0F171E;
+}
+
+.navbar {
+  position: fixed;
+    width: 100%;
+    height: 60px;
+    background-color: #0F171E;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    color: white;
+    z-index: 100;
+    box-sizing: border-box; 
+}
+  
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #CCCCFF;
+}
+
+.links a {
+    margin-left: 20px;
+    cursor: pointer;
+    color:white;
+    text-decoration: none;
+}
+
+.links a:hover {
+    color: #CCCCFF;
+}
+  
+.bande {
+  width: 100%;
+  min-height: 60vh;
+  background-image: url('../images/bande-background.jpg');
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  padding: 40px 20px; 
+  color: white;
+}
+
+.content {
+  max-width: 50%;
+}
+
+button {
+  margin-top: 20px;
+  padding: 20px 40px;
+  background-color: #CCCCFF;
+  border: none;
+  color: 0F171E;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size:18px;
+  font-weight: bold;
+  height:80px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.container {
+  height: 100vh;
+  background: linear-gradient(#0F171E, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  background-image: url('../images/bande-background.jpg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 40px;
+  border-radius: 8px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  color:white;
+}
+
+.signup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color:rgb(238, 223, 255);
+  border: 1px solid #333;
+  border-radius:15px;
+  color: black;
+  width: 100%;
+}
+
+.error {
+  color: rgb(255, 0, 0);
+  margin-top: 10px;
+  background-color:rgb(255, 176, 176);
+  border-radius:15px;
+  text-align:center;
+  border: 2px solid rgb(255, 3, 3);
+  
+}
+.boutonsNav {
+  margin: 10px 0;  
+  width: 100%;
+  height: 40px;
+  display: flex;          
+  justify-content: center; 
+  align-items: center;     
+}
