@@ -152,13 +152,79 @@ select {
   justify-content: center; 
   align-items: center;     
 }
-
-.admin-stat {
+.stats-container {
   display: flex;
-  gap: 40px;
   justify-content: center;
-  align-items: center;
-  margin-top: 40px;
+  align-items: flex-start;
+  gap: 60px;           
+  flex-wrap: wrap;      
+}
+
+.chart-wrapper {
+  min-width: 300px;
+}
+
+.cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 50px;
+  justify-items: center;
+}
+
+
+.cards-wrapper .admin-card:nth-child(4) {
+  grid-column: 1;
+}
+
+
+.cards-wrapper .admin-card:nth-child(5) {
+  grid-column: 3;
+}
+
+@media (max-width: 768px) {
+  .stats-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .cards-wrapper {
+    grid-template-columns: 1fr; 
+    gap: 20px;
+  }
+
+  .cards-wrapper .admin-card:nth-child(4),
+  .cards-wrapper .admin-card:nth-child(5) {
+    grid-column: span 1; 
+  }
+}
+
+.cards-wrapper-9 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  justify-items: center;
+  margin-left:5%;
+  margin-right:5%;
+}
+
+
+.cards-wrapper-9 .admin-card:nth-child(8) {
+  grid-column: 4;
+}
+
+@media (max-width: 768px) {
+  .cards-wrapper-9 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .cards-wrapper-9 .admin-card {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
 }
 
 .admin-card {
@@ -168,7 +234,6 @@ select {
   color: white;
   font-weight: bold;
   font-size: 18px;
-  cursor: pointer;
 }
 
 .icon-circle {
