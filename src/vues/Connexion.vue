@@ -11,7 +11,7 @@ const router = useRouter()
 
 const handleLogin = async () => {
   try {
-    router.push("/private")
+    router.push("/admin")
   } catch (err) {
     error.value = "Identifiants incorrects"
   }
@@ -41,7 +41,7 @@ const login = async () => {
       <div >
       <button class="boutonsNav" @click="handleLogin">Se connecter</button>
       </div>
-      <div class="signup">
+      <div class="nav">
         <p>Si vous n'avez pas encore de compte :</p>
         <button  class="boutonsNav" @click="goSignUp">S'inscrire</button>
       </div>

@@ -37,7 +37,7 @@ const valider = async () => {
       <input type="password" v-model="password" placeholder="Mot de passe" />
       <input type="password" v-model="confirmPassword" placeholder="Confirmer le mot de passe" />
       
-      <div class="signup">
+      <div class="nav">
         <button class="boutonsNav" @click="valider">Valider</button>
         <button class="boutonsNav" @click="annuler">Annuler</button>
       </div>

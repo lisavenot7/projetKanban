@@ -7,8 +7,8 @@
   <nav class="navbar">
     <div class="logo">Planora</div>
     <div class="links">
-       <a><router-link to="/">Accueil</router-link></a>
-      <a><router-link to="/connexion">Connexion</router-link></a>
+      <router-link to="/">Accueil</router-link>
+      <router-link to="/connexion">Connexion</router-link>
     </div>
   </nav>
 </template>

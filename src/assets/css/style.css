@@ -14,10 +14,12 @@ html, body {
   width: 100%;
   min-height: 100vh;
   background-color: #0F171E;
+  color:white;
 }
 
 .navbar {
   position: fixed;
+  top: 0;
     width: 100%;
     height: 60px;
     background-color: #0F171E;
@@ -65,6 +67,10 @@ html, body {
   max-width: 50%;
 }
 
+.contentAdmin {
+  max-width: 75%;
+}
+
 button {
   margin-top: 20px;
   padding: 20px 40px;
@@ -103,7 +109,7 @@ button:hover {
   color:white;
 }
 
-.signup {
+.nav {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -118,6 +124,16 @@ input {
   color: black;
   width: 100%;
 }
+
+select {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color:rgb(238, 223, 255);
+  border: 1px solid #333;
+  border-radius:15px;
+  color: black;
+  width: 100%;
+ }
 
 .error {
   color: rgb(255, 0, 0);
@@ -135,4 +151,206 @@ input {
   display: flex;          
   justify-content: center; 
   align-items: center;     
+}
+
+.admin-stat {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.icon-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ccccff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  transition: 0.2s;
+  color: #0F171E;
+}
+@media (max-width: 768px) {
+  .bandeau {
+    flex-direction: column;   
+    align-items: stretch;     
+    gap: 10px;                
+  }
+
+  .bandeau-item {
+    flex-direction: column;   
+    align-items: stretch;     
+    gap: 10px;                
+  }
+
+  .bandeau-item input,
+  .bandeau-item select,
+  .bandeau-item .gestion {
+    width: 100%;              
+  }
+}
+
+.bandeau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px 40px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bandeau-item {
+  display: flex;            
+  align-items: center;      
+  gap: 10px;                
+  flex: 1 1 300px;          
+  min-width: 200px;
+  color:white;
+}
+
+.bandeau-item input,
+.bandeau-item select {
+  flex: 1;                  
+  height: 40px;
+  padding: 10px 12px;
+  font-size: 16px;
+  border-radius: 15px;
+  border: 1px solid #333;
+  background-color: rgb(238, 223, 255);
+  color: black;
+  box-sizing: border-box;
+  display: block;
+}
+
+#search {
+  margin: 0;
+}
+
+.filter select {
+  margin: 0;
+}
+
+.gestion {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;            /* permet le scroll horizontal */
+  -webkit-overflow-scrolling: touch;  /* scroll fluide sur iOS */
+  padding-bottom: 10px;        /* espace sous le tableau */
+}
+
+.table-container table {
+  min-width: 800px;           /* force le tableau à dépasser si petit écran */
+  width: 90%;
+}
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+  margin: 20px auto; 
+  background-color: #1A222E;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  color:white;
+}
+
+caption {
+  caption-side: top;
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+thead {
+  background-color: #2C3545;
+}
+
+.ajout {
+  background-color: #CCCCFF;
+  padding: 10px;
+  border: none;
+  color: 0F171E;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size:18px;
+  font-weight: bold;
+  width : 150px;
+  height:40px;
+  margin-left:5%;
+}
+
+.vide{
+  color:white;
+  margin-left:5%;
+}
+
+.checkbox-container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CCCCFF;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-label input:checked {
+  background-color: #CCCCFF; 
+  border-color: #CCCCFF;
+}
+
+.checkbox-label input:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  width: 5px;
+  height: 10px;
+  border: solid #0F171E;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.titre{
+  margin-left:5%;
 }
