@@ -62,11 +62,19 @@ public class TableauServiceImpl implements TableauService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("La tableau avec l'ID %d n'existe pas", tableauId)));
 
-        var modifiedTableau = tableauMapper.toEntity(tableauDto);
-
+        if (tableauDto.getTabNom() != null) {
+            tableau.setTabNom(tableauDto.getTabNom());
+        }
+        if (tableauDto.getCptId() != 0) {
+            tableau.setCptId(tableauDto.getCptId());
+        }
+        if (tableauDto.getTabDateCreation() != null) {
+            tableau.setTabDateCreation(tableauDto.getTabDateCreation());
+        }
 
         var savedTableau = tableauRepository.save(tableau);
 
         return tableauMapper.toDto(savedTableau);
     }
+
 }

@@ -1,8 +1,13 @@
 package com.mappers;
 
+import com.dtos.ColonneDto;
 import com.dtos.TableauDto;
+import com.entities.Colonne;
 import com.entities.Tableau;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Mapper responsable de la conversion entre les entités Dog et les DTOs DogDto.
@@ -15,46 +20,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class TableauMapper {
 
-    /**
-     * Convertit une entité Dog en DTO DogDto
-     * Cette méthode est utilisée pour exposer les données aux clients de l'API
-     * 
-     * @param tableau l'entité à convertir
-     * @return le DTO correspondant ou null si l'entité est null
-     */
+    private final ColonneMapper colonneMapper =  new ColonneMapper();
+
     public TableauDto toDto(Tableau tableau) {
-        if (tableau == null) {
-            return null;
+        if(tableau == null) return null;
+        var dto = new TableauDto();
+        dto.setTabId(tableau.getTabId());
+        dto.setTabNom(tableau.getTabNom());
+        dto.setCptId(tableau.getCptId());
+        dto.setTabDateCreation(tableau.getTabDateCreation());
+        if (tableau.getColonnes() != null) {
+            dto.setColonnes(tableau.getColonnes().stream()
+                    .map(colonneMapper::toDto)
+                    .collect(Collectors.toList()));
         }
-
-        TableauDto tableauDto = new TableauDto();
-        tableauDto.setTabId(tableau.getTabId());
-        tableauDto.setCptId(tableau.getCptId());
-        tableauDto.setTabNom(tableau.getTabNom());
-        tableauDto.setTabDateCreation(tableau.getTabDateCreation());
-
-        return tableauDto;
+        return dto;
     }
 
-    /**
-     * Convertit un DTO DogDto en entité Dog
-     * Cette méthode est utilisée pour persister les données reçues des clients
-     * Note: La date de naissance n'est pas dans le DTO mais est présente dans l'entité
-     * 
-     * @param tableauDto le DTO à convertir
-     * @return l'entité correspondante ou null si le DTO est null
-     */
-    public Tableau toEntity(TableauDto tableauDto) {
-        if (tableauDto == null) {
-            return null;
+    public Tableau toEntity(TableauDto dto) {
+        if(dto == null) return null;
+        var t = new Tableau();
+        t.setTabId(dto.getTabId());
+        t.setTabNom(dto.getTabNom());
+        t.setTabDateCreation(dto.getTabDateCreation());
+        t.setCptId(dto.getCptId());
+        if (dto.getColonnes() != null) {
+            List<Colonne> cols = dto.getColonnes().stream()
+                    .map(c -> {
+                        Colonne col = colonneMapper.toEntity(c);
+                        col.setTableau(t); // lier la colonne au tableau
+                        return col;
+                    })
+                    .collect(Collectors.toList());
+            t.setColonnes(cols);
         }
-        Tableau tableau = new Tableau();
-
-        tableau.setTabId(tableauDto.getTabId());
-        tableau.setCptId(tableauDto.getCptId());
-        tableau.setTabNom(tableauDto.getTabNom());
-        tableau.setTabDateCreation(tableauDto.getTabDateCreation());
-
-        return tableau;
+        return t;
     }
+
 } 

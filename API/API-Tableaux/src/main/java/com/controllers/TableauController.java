@@ -1,8 +1,10 @@
 package com.controllers;
 
+import com.dtos.ColonneDto;
 import com.dtos.DisplayResponseDto;
 import com.dtos.TableauDto;
 import com.services.TableauService;
+import com.services.impl.ColonneServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,11 @@ import java.util.List;
 public class TableauController {
 
     private final TableauService tableauService;
+    private final ColonneServiceImpl colonneService;
 
-    public TableauController(TableauService tableauService) {
+    public TableauController(TableauService tableauService, ColonneServiceImpl colonneService) {
         this.tableauService = tableauService;
+        this.colonneService = colonneService;
     }
 
     @GetMapping
@@ -70,4 +74,26 @@ public class TableauController {
         return tableauService.deleteTableau(id);
     }
 
+    @GetMapping("/{id}/colonnes")
+    public DisplayResponseDto<List<ColonneDto>> getColonnesOneTableau(@PathVariable Long id) {
+        DisplayResponseDto<List<ColonneDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(tableauService.getTableauById(id).getColonnes());
+
+        return displayResponseDto;
+    }
+
+    @PostMapping("/{id}/colonnes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<TableauDto> saveColonne(@PathVariable Long id, final @RequestBody ColonneDto colonneDto) {
+        DisplayResponseDto<TableauDto> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("item");
+        displayResponseDto.setData(colonneService.createColonne(id, colonneDto));
+
+        return displayResponseDto;
+    }
 }
