@@ -5,15 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ColonneDto {
 
-    @NotNull
-    private Long clnId;
+    private Long clnId; // optionnel à la création
 
     @NotNull
     private String clnNom;
-    
+
+    @NotNull
+    private Long tabId; // ID du tableau auquel la colonne appartient
+
+    // Optionnel : inclure les tâches
+    private List<TacheDto> taches;
 }

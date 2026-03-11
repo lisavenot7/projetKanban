@@ -18,5 +18,14 @@ public class Tache {
 
     private String tchTitre;
     private String tchDescription;
+    private String tchDateLimite;
+    private int tchPriorite;
 
+    @ManyToOne
+    @JoinColumn(name = "cptId") // clé étrangère vers le compte
+    private Compte compteAttribue; // compte auquel la tâche est attribuée
+
+    @ManyToOne
+    @JoinColumn(name = "clnId") // clé étrangère vers la colonne
+    private Colonne colonne;
 }

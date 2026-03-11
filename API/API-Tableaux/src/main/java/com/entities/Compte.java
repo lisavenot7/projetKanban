@@ -29,12 +29,17 @@ public class Compte {
     @ManyToMany
     @JoinTable(
             name = "compte_tableau",         // table de jointure
-            joinColumns = @JoinColumn(name = "cpt_id"),  // FK vers Compte
-            inverseJoinColumns = @JoinColumn(name = "tab_id") // FK vers Tableau
+            joinColumns = @JoinColumn(name = "cptId"),  // FK vers Compte
+            inverseJoinColumns = @JoinColumn(name = "tabId") // FK vers Tableau
     )
     private Set<Tableau> participations = new HashSet<>();
 
     // Tableaux créés par ce compte
     @OneToMany(mappedBy = "createur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tableau> tableauxCrees;
+
+    @OneToMany(mappedBy = "compteAttribue", cascade = CascadeType.ALL)
+    private List<Tache> taches; // les tâches attribuées à ce compte
+
+
 }

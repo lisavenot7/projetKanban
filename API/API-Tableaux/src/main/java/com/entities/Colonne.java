@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "colonnes")
@@ -22,4 +24,7 @@ public class Colonne {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tabId")
     private Tableau tableau;
+
+    @OneToMany(mappedBy = "colonne", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tache> taches;
 }
