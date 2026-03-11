@@ -15,4 +15,6 @@ public interface TableauService {
     List<TableauDto> getAllTableaux();
 
     TableauDto updateTableau(Long TableauId, TableauDto TableauDto);
+
+    TableauDto createTableau(Long cptId, TableauDto tableauDto);
 }

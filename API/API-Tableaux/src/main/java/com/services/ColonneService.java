@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface ColonneService {
 
-    ColonneDto saveColonne(ColonneDto ColonneDto);
-
     ColonneDto getColonneById(Long ColonneId);
 
     boolean deleteColonne(Long ColonneId);

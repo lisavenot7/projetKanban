@@ -6,17 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TableauDto {
 
-    @NotNull
-    private Long tabId;
-
-    @NotNull
-    private int cptId;
+    private Long tabId; // pas besoin de @NotNull si utilisé pour la création
 
     @NotNull
     private String tabNom;
@@ -24,4 +21,8 @@ public class TableauDto {
     private String tabDateCreation;
 
     private List<ColonneDto> colonnes;
+
+    private Set<Long> comptesIds; // IDs des participants
+
+    private Long createurId; // ID du compte créateur
 }

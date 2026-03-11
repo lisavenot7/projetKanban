@@ -32,13 +32,6 @@ public class ColonneServiceImpl implements ColonneService {
     }
 
     @Override
-    public ColonneDto saveColonne(ColonneDto colonneDto) {
-        var colonne = colonneMapper.toEntity(colonneDto);
-        var savedColonne = colonneRepository.save(colonne);
-        return colonneMapper.toDto(savedColonne);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public ColonneDto getColonneById(Long colonneId) {
         var colonne = colonneRepository.findById(colonneId)
