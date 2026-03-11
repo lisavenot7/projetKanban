@@ -1,0 +1,43 @@
+[
+    {
+      "id": 1,
+      "nom": "Tache 1",
+      "dateLimite":"2026-03-15",
+      "prioritaire":0,
+      "colonne":1,
+      "utilisateur":1,
+      "etat":"A faire",
+      "commentaires":[1,2]
+    },
+    {
+        "id": 2,
+        "nom": "Tache 2",
+        "dateLimite":"2026-03-15",
+        "prioritaire":0,
+        "colonne":1,
+        "utilisateur":2,
+        "etat":"Retard",
+        "commentaires":[3,4]
+    },
+    {
+        "id": 3,
+        "nom": "Tache 3",
+        "dateLimite":"2026-03-15",
+        "prioritaire":1,
+        "colonne":1,
+        "utilisateur":1,
+        "etat":"En cours",
+        "commentaires":[]
+    },
+    {
+        "id": 4,
+        "nom": "Tache 4",
+        "dateLimite":null,
+        "prioritaire":0,
+        "colonne":1,
+        "utilisateur":2,
+        "etat":"Terminé",
+        "commentaires":[]
+    }
+
+  ]

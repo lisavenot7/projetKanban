@@ -14,47 +14,29 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 
 import usersData from '../bdd/users.json'
 
-// Données camembert comptes actifs/désactivés
-const actifCount = computed(() => usersData.filter(u => u.actif === 1).length)
-const desactiveCount = computed(() => usersData.filter(u => u.actif === 0).length)
+const nbTachesAssignéMoy = 25
+const nbTachesRetardMoy = 3
+const nbTachesTerminesMoy = 10
 
-const dataActif = computed(() => ({
-  labels: ['Activés', 'Désactivés'],
+const dataTache = computed(() => ({
+  labels: ['Moyenne de tâches terminées par tableau', 'Moyenne de tâches en retard par tableau','Moyenne de tâches assignées par tableau'],
   datasets: [
     {
-      label: 'Comptes',
-      backgroundColor: ['#4BC0C0', '#FF6384'],
-      data: [actifCount.value, desactiveCount.value]
+      label: 'Tâches',
+      backgroundColor: ['#4BC0C0', '#FF6384', '#FBD2BD'],
+      data: [nbTachesTerminesMoy,nbTachesRetardMoy, nbTachesAssignéMoy]
     }
   ]
 }))
 
-// Données camembert admin/utilisateurs
-const adminCount = computed(() => usersData.filter(u => u.isAdmin === 1).length)
-const utilCount = computed(() => usersData.filter(u => u.isAdmin === 0).length)
 
-const dataRole = computed(() => ({
-  labels: ['Admin', 'Utilisateurs'],
-  datasets: [
-    {
-      label: 'Comptes',
-      backgroundColor: ['#FFCE56', '#36A2EB'],
-      data: [adminCount.value, utilCount.value]
-    }
-  ]
-}))
 </script>
 
 <template>
   <div class="charts-container" style="display:flex; gap:50px;">
-    <div style="width:250px; height:250px;">
-      <h3>Comptes activés vs Comptes désactivés</h3>
-      <Doughnut :data="dataActif" />
-    </div>
-
-    <div style="width:250px; height:250px;">
-      <h3>Administrateurs vs Utilisateurs</h3>
-      <Doughnut :data="dataRole" />
+    <div style="width:350px; height:350px;">
+      <h3>Gestion des tâches</h3>
+      <Doughnut :data="dataTache" />
     </div>
   </div>
 </template>

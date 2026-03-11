@@ -3,7 +3,7 @@
 import Navbar from "../components/NavbarAdmin.vue"
 import Bandeau from "../components/BandeauAdmin.vue"
 
-import StatsChart from '../components/StatsUtilisateur.vue'
+import StatsChart from '../components/StatsUtilisateurs.vue'
 
 import {ref,computed} from 'vue'
 
@@ -15,6 +15,10 @@ const nbUtil = computed(() => usersData.filter(user => user.isAdmin === 0).lengt
 const nbAct = computed(() => usersData.filter(user => user.actif === 1).length)
 const nbDes = computed(() => usersData.filter(user => user.actif === 0).length)
 
+const showUserStat = ref(false)
+const toggleUserStat = () => {
+  showUserStat.value = !showUserStat.value
+}
 
 const nbTableauxUser = 5
 const nbcolonneTableau = 3
@@ -25,19 +29,28 @@ const nbTachesPrioritaire = 2
 const nbTachesAssigné = 10
 const nbUserTab = 4
 const nbCommentaireTache = 7
+
+const showTabStat = ref(false)
+const toggleTabStat = () => {
+  showTabStat.value = !showTabStat.value
+}
 </script>
 
 <template>
   <Navbar />
   <div class="home">
     <br/><br/>
-    <h2 class="titre">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+    <h2 class="titre" @click="toggleUserStat">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
       Statistiques des utilisateurs
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </h2>
-    <div class="stats-container">
+    <div v-if="showUserStat" class="stats-container">
       <div class="chart-wrapper">
         <StatsChart />
       </div>
@@ -69,15 +82,42 @@ const nbCommentaireTache = 7
 
 
     <br/><br/>
-    <h2 class="titre">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+    <h2 class="titre" @click="toggleTabStat">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
+        <rect x="5" y="7" width="4" height="10" rx="1.5" fill="currentColor"/>
+        <rect x="10" y="7" width="4" height="6" rx="1.5" fill="currentColor"/>
+        <rect x="15" y="7" width="4" height="8" rx="1.5" fill="currentColor"/>
       </svg>
       Statistiques des tableaux et des tâches (MOYENNE)
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </h2>
-    <div class="stats-container">
+    <div v-if="showTabStat" class="stats-container">
       <div class="cards-wrapper-9">
+        <div class="admin-card">
+          <div class="icon-circle"><h1>{{nbTachesPrioritaire}}</h1></div>
+          <span>Tâches prioritaires par tableau</span>
+        </div>
+          <div class="admin-card">
+          <div class="icon-circle"><h1>{{nbTachesRetard}}</h1></div>
+          <span>Tâches en retard par tableau</span>
+        </div>
+        <div class="admin-card">
+          <div class="icon-circle"><h1>{{nbTacheTableau}}</h1></div>
+          <span>Tâches par tableau</span>
+        </div>
+        <div class="admin-card">
+          <div class="icon-circle"><h1>{{nbTachesTermines}}</h1></div>
+          <span>Tâches terminées par tableau</span>
+        </div>
        
+        
+        <div class="admin-card">
+          <div class="icon-circle"><h1>{{nbTachesAssigné}}</h1></div>
+          <span>Tâches assigné par utilisateur et tableau</span>
+        </div>
         <div class="admin-card">
           <div class="icon-circle"><h1>{{nbTableauxUser}}</h1></div>
           <span>Tableaux par utilisateur</span>
@@ -94,29 +134,9 @@ const nbCommentaireTache = 7
           <div class="icon-circle"><h1>{{nbCommentaireTache}}</h1></div>
           <span>Commentaires par tâches</span>
         </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesRetard}}</h1></div>
-          <span>Tâches en retard par tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTacheTableau}}</h1></div>
-          <span>Tâches par tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesTermines}}</h1></div>
-          <span>Tâches terminées par tableau</span>
-        </div>
-       
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesPrioritaire}}</h1></div>
-          <span>Tâches prioritaires par tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesAssigné}}</h1></div>
-          <span>Tâches assigné par utilisateur et tableau</span>
-        </div>
+        
       </div>
     </div>
-    
+    <br/><br/>
   </div>
 </template>

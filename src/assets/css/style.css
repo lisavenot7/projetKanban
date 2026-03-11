@@ -283,14 +283,12 @@ select {
   display: flex;            
   align-items: center;      
   gap: 10px;                
-  flex: 1 1 300px;          
   min-width: 200px;
   color:white;
 }
 
 .bandeau-item input,
-.bandeau-item select {
-  flex: 1;                  
+.bandeau-item select {                  
   height: 40px;
   padding: 10px 12px;
   font-size: 16px;
@@ -323,13 +321,13 @@ select {
 
 .table-container {
   width: 100%;
-  overflow-x: auto;            /* permet le scroll horizontal */
-  -webkit-overflow-scrolling: touch;  /* scroll fluide sur iOS */
-  padding-bottom: 10px;        /* espace sous le tableau */
+  overflow-x: auto;            
+  -webkit-overflow-scrolling: touch; 
+  padding-bottom: 10px;    
 }
 
 .table-container table {
-  min-width: 800px;           /* force le tableau à dépasser si petit écran */
+  min-width: 800px;           
   width: 90%;
 }
 
@@ -367,6 +365,17 @@ thead {
   width : 150px;
   height:40px;
   margin-left:5%;
+}
+
+.ajouter {
+  height: 40px;
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
 }
 
 .vide{
@@ -418,4 +427,193 @@ thead {
 
 .titre{
   margin-left:5%;
+  cursor: pointer;
+}
+.titre:hover {
+color: #CCCCFF;
+}
+
+.row {
+  padding: 20px 40px;
+}
+
+.tab-cards {
+  color: white;
+  margin-bottom: 10px;
+  background-color: #161D25;
+  padding: 40px;
+  border-radius: 8px;
+  text-align:center;
+}
+
+.tab-cards:hover {
+  color: #CCCCFF;
+}
+
+.tableaux {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 16px;
+}
+
+.col-cards {
+  flex: 0 0 350px;
+  color: #161D25;
+  background-color: #ccccff;
+  padding: 20px;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  max-height: 80vh;   
+  overflow-y: auto;   
+}
+.col-cards::-webkit-scrollbar {
+  width: 6px;
+}
+
+.col-cards::-webkit-scrollbar-track {
+  background: #bdbdf5;
+  border-radius: 4px;
+}
+
+.col-cards::-webkit-scrollbar-thumb {
+  background: #5c5cd6;
+  border-radius: 4px;
+}
+
+.colonnes {
+  display: flex;              
+  flex-direction: row;        
+  gap: 16px;                  
+  height: 100%;
+  overflow-x: auto;           
+  padding-bottom: 10px;       
+  scrollbar-width: thin;      
+  scrollbar-color: #CCCCFF #1A222E; 
+}
+
+.colonnes::-webkit-scrollbar {
+  height: 8px;
+}
+
+.colonnes::-webkit-scrollbar-track {
+  background: #1A222E;
+  border-radius: 4px;
+}
+
+.colonnes::-webkit-scrollbar-thumb {
+  background-color: #CCCCFF;
+  border-radius: 4px;
+  border: 2px solid #1A222E;
+}
+
+.row2 {
+  padding: 20px 40px;
+  height:100%;
+}
+
+
+
+.tache-cards {
+  color: #161D25;
+  margin-bottom: 4px;      
+  background-color: white;     
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;             
+  box-sizing: border-box;  
+}
+
+.tache-cards p {
+  margin-top: 0px; 
+  margin-bottom: 2px; 
+}
+
+.taches :hover {
+  background-color: #9393d3;
+}
+
+.taches {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tableau-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left:5%;
+  margin-right:5%;
+}
+
+.menu-container {
+  position: relative;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  margin-top:-10px;
+}
+
+.menu-button:hover {
+  color: #CCCCFF;
+}
+
+.menu-button2 {
+  background: none;
+  border: none;
+  color: #1A222E;
+  font-size: 28px;
+  cursor: pointer;
+  margin-top:-10px;
+}
+
+.menu-button2:hover {
+  color: white;
+}
+
+.menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: #1A222E;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.menu-dropdown p {
+  margin: 0;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.menu-dropdown p:hover {
+  background: #2C3545;
+}
+
+.btn-ajouter {
+  background-color: #CCCCFF;  
+  color: #0F171E;             
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;       
+  justify-content: center;   
+  height: 40px;              
+  line-height: 1;            
+  transition: all 0.2s ease;
 }
