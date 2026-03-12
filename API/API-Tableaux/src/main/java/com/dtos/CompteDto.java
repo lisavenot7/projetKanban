@@ -24,7 +24,7 @@ public class CompteDto {
     @NotNull
     private String cptMdp;
 
-    private boolean cptIsAdmin; // pas besoin de @NotNull, boolean primitif
+    private int cptIsAdmin; // pas besoin de @NotNull, boolean primitif
 
     private List<TableauDto> tableauxCrees; // tableaux créés par ce compte
 

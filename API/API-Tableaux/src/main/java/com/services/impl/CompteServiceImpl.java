@@ -78,7 +78,7 @@ public class CompteServiceImpl implements CompteService {
         if (compteDto.getCptMdp() != null) {
             compte.setCptMdp(compteDto.getCptMdp());
         }
-        compte.setCptIsAdmin(compteDto.isCptIsAdmin());
+        compte.setCptIsAdmin(compteDto.getCptIsAdmin());
 
         // Gestion des tableaux créés par ce compte
         if (compteDto.getTableauxCrees() != null) {

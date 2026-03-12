@@ -22,7 +22,7 @@ public class CompteMapper {
         dto.setCptMail(compte.getCptMail());
         dto.setCptPseudo(compte.getCptPseudo());
         dto.setCptMdp(compte.getCptMdp());
-        dto.setCptIsAdmin(compte.isCptIsAdmin());
+        dto.setCptIsAdmin(compte.getCptIsAdmin());
 
         if (compte.getTableauxCrees() != null) {
             List<TableauDto> tableauDtos = compte.getTableauxCrees().stream()
@@ -46,7 +46,7 @@ public class CompteMapper {
         compte.setCptMail(dto.getCptMail());
         compte.setCptPseudo(dto.getCptPseudo());
         compte.setCptMdp(dto.getCptMdp());
-        compte.setCptIsAdmin(dto.isCptIsAdmin());
+        compte.setCptIsAdmin(dto.getCptIsAdmin());
 
         if (dto.getTableauxCrees() != null) {
             var tableaux = dto.getTableauxCrees().stream()
