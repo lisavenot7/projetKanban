@@ -10,11 +10,16 @@ const route = useRoute()
 
 const idParam = Number(route.params.id)  
 
-const projet = tabsData.find(t => t.id === idParam) || { participants: [] }
+const tableau = tabsData.find(t => t.id === idParam) || { participants: [] }
 
-const participants = projet.participants.map(pseudo => {
+const participants = tableau.participants.map(pseudo => {
   return usersData.find(u => u.pseudo === pseudo) || { pseudo: "Inconnu", nom: "", prenom: "" }
 })
+
+function goToGestion() {
+  router.push(`/private/tableaux/${tableau.id}/participants/gestion`)
+}
+
 </script>
 
 <template>
@@ -23,7 +28,7 @@ const participants = projet.participants.map(pseudo => {
     <div class="box">
       <h1>Liste des participants</h1>
       <div style="margin-bottom:10px;">
-        <button class="btn-ajouter" style="height:40px;" @click="goToAjouter">Ajouter</button>
+        <button class="boutonsNav" style="height:40px;" @click="goToGestion">Gestion des participants</button>
       </div>
       <div 
         class="tache-cards" 

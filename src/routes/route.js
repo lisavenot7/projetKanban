@@ -16,6 +16,14 @@ import Tableau from '../vues/Tableau.vue'
 import TableauAjouter from '../vues/TableauAjouter.vue'
 import TableauModifier from '../vues/TableauModifier.vue'
 import Participants from '../vues/Participants.vue'
+import ParticipantsGestion from '../vues/ParticipantsGestion.vue'
+import ColonneAjouter from '../vues/ColonneAjouter.vue'
+import ColonneModifier from '../vues/ColonneModifier.vue'
+import TacheAjouter from '../vues/TacheAjouter.vue'
+import Tache from '../vues/Tache.vue'
+import TacheModifier from '../vues/TacheModifier.vue'
+import CommentaireAjouter from '../vues/CommentaireAjouter.vue'
+import CommentaireModifier from '../vues/CommentaireModifier.vue'
 
 const routes = [
     {
@@ -112,6 +120,46 @@ const routes = [
         path: '/private/tableaux/:id/participants',
         name: 'Participants',
         component: Participants,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/participants/gestion',
+        name: 'ParticipantsGestion',
+        component: ParticipantsGestion,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/ajouter',
+        name: 'ColonneAjouter',
+        component: ColonneAjouter,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/modifier',
+        name: 'ColonneModifier',
+        component: ColonneModifier,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/ajouter',
+        name: 'TacheAjouter',
+        component: TacheAjouter,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache',
+        name: 'Tache',
+        component: Tache,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/modifier',
+        name: 'TacheModifier',
+        component: TacheModifier,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires/ajouter',
+        name: 'CommentaireAjouter',
+        component: CommentaireAjouter,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires/:idcom/modifier',
+        name: 'CommentaireModifier',
+        component: CommentaireModifier,
         meta: { requiresAuth: true }
     }
 ]

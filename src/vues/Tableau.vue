@@ -47,6 +47,18 @@ onBeforeUnmount(() => {
 function goToModifier() {
   router.push(`/private/tableaux/${tableau.id}/modifier`)
 }
+
+function goToParticipants() {
+  router.push(`/private/tableaux/${tableau.id}/participants`)
+}
+
+function goToParticipantsGestion() {
+  router.push(`/private/tableaux/${tableau.id}/participants/gestion`)
+}
+
+function goToColonneAdd() {
+  router.push(`/private/tableaux/${tableau.id}/colonnes/ajouter`)
+}
 </script>
 
 <template>
@@ -65,13 +77,13 @@ function goToModifier() {
           <p @click="goToModifier">
             Modifier le tableau
           </p>
-          <p>
+          <p @click="goToColonneAdd">
             Ajouter une colonne
           </p>
-          <p>
-            Inviter de nouveaux participants
+          <p @click="goToParticipantsGestion">
+            Gestion des participants
           </p>
-          <p>
+          <p @click="goToParticipants">
             Liste des participants
           </p>
           <p>

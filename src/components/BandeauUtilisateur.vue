@@ -9,7 +9,7 @@
       suivre l’avancement de votre travail et collaborer avec les membres que vous choisissez d’inviter.
       Utilisez cet espace pour structurer vos idées, planifier vos actions et garder une vue claire sur vos priorités.
       </p>
-      <a><router-link to="/tableaux"><button>VOS TABLEAUX</button></router-link></a>
+      <a><router-link to="/private/tableaux"><button>VOS TABLEAUX</button></router-link></a>
     </div>
   </div>
 </template>

@@ -1,14 +1,20 @@
 <script setup>
-import { useRouter} from 'vue-router'
+import { useRouter,useRoute} from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const props = defineProps({
   tache: Array
 })
 
-function goToTache(tache) {
-   router.push(`/private/tableaux/${tab.id}`)
+const idTableau = Number(route.params.id)
+
+function goToTache(tacheId, idColonne) {
+   router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${tacheId}`)
 }
+
+const today = new Date();
+today.setHours(0, 0, 0, 0); 
 </script>
 
 <template>
@@ -17,7 +23,7 @@ function goToTache(tache) {
       class="tache-cards" 
       v-for="t in tache"
       :key="t.id"
-      @click="goToTache(t)"
+      @click="goToTache(t.id, t.colonne)"
       style="cursor:pointer"
       >
       <h3>
@@ -39,14 +45,14 @@ function goToTache(tache) {
       <p v-if="t.etat==='Terminé'" style="color:green">
         {{ t.etat }}
       </p>
-      <p v-else-if="t.etat==='Retard'" style="color:red">
-        {{ t.etat }}
-      </p>
       <p v-else-if="t.etat==='En cours'" style="color:orange">
         {{ t.etat }}
       </p>
       <p v-else >
         {{ t.etat }}
+      </p>
+      <p v-if="t.dateLimite && new Date(t.dateLimite) < today && t.etat!=='Terminé'" style="color:red">
+        Retard
       </p>
       <p >
         {{ t.commentaires.length }} commentaires

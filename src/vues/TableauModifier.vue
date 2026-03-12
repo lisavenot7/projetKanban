@@ -17,14 +17,12 @@ const nom = ref(tab.titre)
 
 
 const annuler = async () => {
-  router.push("/private/tableaux")
+  router.push(`/private/tableaux/${tab.id}`)
 }
 const valider = async () => {
   
-  router.push("/private/tableaux")
+  router.push(`/private/tableaux/${tab.id}`)
 }
-
-const admin = ref(false)
 
 </script>
 

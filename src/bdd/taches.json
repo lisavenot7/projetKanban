@@ -5,18 +5,20 @@
       "dateLimite":"2026-03-15",
       "prioritaire":0,
       "colonne":1,
-      "utilisateur":1,
+      "utilisateur":"robertD",
+      "description":"description 1",
       "etat":"A faire",
-      "commentaires":[1,2]
+      "commentaires":[1,2,5]
     },
     {
         "id": 2,
         "nom": "Tache 2",
-        "dateLimite":"2026-03-15",
+        "dateLimite":"2026-03-03",
         "prioritaire":0,
         "colonne":1,
-        "utilisateur":2,
-        "etat":"Retard",
+        "utilisateur":"joseS",
+        "description":"description",
+        "etat":"En cours",
         "commentaires":[3,4]
     },
     {
@@ -25,7 +27,8 @@
         "dateLimite":"2026-03-15",
         "prioritaire":1,
         "colonne":1,
-        "utilisateur":1,
+        "utilisateur":"robertD",
+        "description":"description",
         "etat":"En cours",
         "commentaires":[]
     },
@@ -35,7 +38,19 @@
         "dateLimite":null,
         "prioritaire":0,
         "colonne":1,
-        "utilisateur":2,
+        "utilisateur":"joseS",
+        "description":"description",
+        "etat":"Terminé",
+        "commentaires":[]
+    },
+    {
+        "id": 5,
+        "nom": "Tache 5",
+        "dateLimite":"2026-03-12",
+        "prioritaire":1,
+        "colonne":1,
+        "utilisateur":"robertS",
+        "description":"description",
         "etat":"Terminé",
         "commentaires":[]
     }

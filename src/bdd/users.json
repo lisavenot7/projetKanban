@@ -24,10 +24,42 @@
     "actif":1
   },
   {
-    "pseudo": "joseD",
+    "pseudo": "joseA",
     "prenom": "José",
-    "nom":"Duncan",
-    "mail":"jose.duncan@gmail.com",
+    "nom":"Acan",
+    "mail":"jose.acan@gmail.com",
+    "isAdmin":0,
+    "actif":0
+  },
+  {
+    "pseudo": "joseB",
+    "prenom": "José",
+    "nom":"Buncan",
+    "mail":"jose.Buncan@gmail.com",
+    "isAdmin":0,
+    "actif":0
+  },
+  {
+    "pseudo": "joseC",
+    "prenom": "José",
+    "nom":"Cuncan",
+    "mail":"jose.Cuncan@gmail.com",
+    "isAdmin":0,
+    "actif":0
+  },
+  {
+    "pseudo": "joseE",
+    "prenom": "José",
+    "nom":"Ecan",
+    "mail":"jose.Ecan@gmail.com",
+    "isAdmin":0,
+    "actif":0
+  },
+  {
+    "pseudo": "joseF",
+    "prenom": "José",
+    "nom":"Funcan",
+    "mail":"jose.Funcan@gmail.com",
     "isAdmin":0,
     "actif":0
   }

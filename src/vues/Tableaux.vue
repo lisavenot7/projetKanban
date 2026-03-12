@@ -4,7 +4,7 @@ import Navbar from "../components/NavbarUtilisateur.vue"
 import Tableau from "../components/LesTableaux.vue"
 
 import { ref, onMounted } from 'vue'
-import { useRouter} from "vue-router"
+import { useRouter } from "vue-router"
 
 const router = useRouter()
 import tabsData from '../bdd/tableaux.json'
@@ -13,7 +13,7 @@ const tabs = ref([])
 const search = ref('')
 const filteredTabs = ref([])
 
-const id = 1
+const id = "robertD"
 
 function getUserTabs(userId) {
   return tabsData.filter(

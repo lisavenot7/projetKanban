@@ -125,6 +125,16 @@ input {
   width: 100%;
 }
 
+textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color:rgb(238, 223, 255);
+  border: 1px solid #333;
+  border-radius:15px;
+  color: black;
+  width: 100%;
+}
+
 select {
   margin-bottom: 15px;
   padding: 10px;
@@ -578,6 +588,19 @@ color: #CCCCFF;
   color: white;
 }
 
+.menu-button3 {
+  background: none;
+  border: none;
+  color: #1A222E;
+  font-size: 28px;
+  cursor: pointer;
+  margin-top:-10px;
+}
+
+.menu-button3:hover {
+  color: #ccccff;
+}
+
 .menu-dropdown {
   position: absolute;
   right: 0;
@@ -616,4 +639,70 @@ color: #CCCCFF;
   height: 40px;              
   line-height: 1;            
   transition: all 0.2s ease;
+}
+
+option:checked {
+  background-color: #9393d3;
+  color: #0F171E;
+}
+
+.tache-box {
+  background-color:white;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 40px;
+  border-radius: 8px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  color:161D25;
+}
+
+.com-box {
+  background-color: #ccccff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  height: 400px; 
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; 
+  gap: 6px;
+}
+
+.com-box::-webkit-scrollbar {
+  width: 6px; 
+}
+
+.com-box::-webkit-scrollbar-track {
+  background: #bdbdf5;
+  border-radius: 4px;
+}
+
+.com-box::-webkit-scrollbar-thumb {
+  background: #5c5cd6;
+  border-radius: 4px;
+}
+
+.com-cards {
+  color: #161D25;
+  margin-bottom: 4px;      
+  background-color: white;     
+  border-radius: 8px;
+  text-align: center;
+  width: 95%;             
+  box-sizing: border-box;  
+}
+
+.com-cards p {
+  margin-top: 0px; 
+  margin-bottom: 20px; 
+}
+
+
+.commentaires {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
