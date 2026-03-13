@@ -26,7 +26,6 @@ public class Compte implements UserDetails {
     @Column(unique = true, length = 100, nullable = false)
     private String cptMail;
 
-    private String cptPseudo;
     private String cptMdp;
     private int cptIsAdmin;
 
