@@ -1,0 +1,35 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-api-tableau
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: tableau_db
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "10057:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  app:
+    build: .
+    container_name: springboot-app-tableau
+    ports:
+      - "10056:8080"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/tableau_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SHOW_SQL=false
+      - DDL_AUTO=update
+    restart: always
+
+
