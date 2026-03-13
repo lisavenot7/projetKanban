@@ -153,7 +153,6 @@ select {
   background-color:rgb(255, 176, 176);
   border-radius:15px;
   text-align:center;
-  border: 2px solid rgb(255, 3, 3);
   
 }
 .boutonsNav {
@@ -709,4 +708,24 @@ option:checked {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.input-password {
+  position: relative;
+  width: 100%;
+}
+
+.input-password input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 40%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
 }
