@@ -6,7 +6,7 @@ services:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: tableau_db
     volumes:
-      - ./data:/var/lib/mysql
+      - tableau_data:/var/lib/mysql
     ports:
       - "10057:3306"
     healthcheck:
@@ -31,5 +31,8 @@ services:
       - SHOW_SQL=false
       - DDL_AUTO=update
     restart: always
+
+volumes:
+  tableau_data:
 
 

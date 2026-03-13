@@ -19,8 +19,41 @@ const error = ref("")
 const annuler = async () => {
   router.push("/")
 }
+
 const valider = async () => {
-  router.push("/")
+  error.value = ""
+
+  if (password.value !== confirmPassword.value) {
+    error.value = "Les mots de passe ne correspondent pas"
+    return
+  }
+
+  const registerUserDto = {
+    email: mail.value,
+    password: password.value,
+    fullName: pseudo.value
+  }
+
+  try {
+    const response = await fetch("http://localhost:10056/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(registerUserDto)
+    })
+
+    if (!response.ok) {
+      const data = await response.json()
+      error.value = data.message || "Un autre compte existe déjà avec ce mail"
+      return
+    }
+
+    const data = await response.json()
+    console.log("Compte créé:", data)
+    router.push("/connexion") 
+  } catch (err) {
+    console.error(err)
+    error.value = "Impossible de contacter le serveur"
+  }
 }
 </script>
 
