@@ -89,15 +89,16 @@ button:hover {
 }
 
 .container {
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(#0F171E, #000);
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top:4%;
 }
 
 .box {
-  background-image: url('../images/bande-background.jpg');
+  background-image: url('../images/background.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -107,6 +108,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   color:white;
+  margin-bottom:4%;
 }
 
 .nav {
@@ -657,6 +659,7 @@ option:checked {
   display: flex;
   flex-direction: column;
   color:161D25;
+  margin-bottom:4%;
 }
 
 .com-box {
@@ -669,6 +672,7 @@ option:checked {
   flex-direction: column;
   overflow-y: auto; 
   gap: 6px;
+  margin-bottom:4%;
 }
 
 .com-box::-webkit-scrollbar {
