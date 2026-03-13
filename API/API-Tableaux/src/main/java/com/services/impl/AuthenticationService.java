@@ -2,7 +2,9 @@ package com.services.impl;
 
 import com.dtos.LoginUserDto;
 import com.dtos.RegisterUserDto;
+import com.entities.Compte;
 import com.entities.User;
+import com.repositories.CompteRepository;
 import com.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
+    private final CompteRepository compteRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -31,12 +33,12 @@ public class AuthenticationService {
     /**
      * Constructeur du service d'authentification.
      *
-     * @param userRepository Le repository de gestion des utilisateurs
+     * @param compteRepository Le repository de gestion des utilisateurs
      * @param passwordEncoder L'encodeur de mots de passe
      * @param authenticationManager Le gestionnaire d'authentification
      */
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
+    public AuthenticationService(CompteRepository compteRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.compteRepository = compteRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
@@ -53,14 +55,14 @@ public class AuthenticationService {
      * @param input Les informations d'inscription
      * @return L'utilisateur créé
      */
-    public User signup(RegisterUserDto input) {
+    public Compte signup(RegisterUserDto input) {
 
-        User user = new User()
-                .setFullName(input.fullName())
-                .setEmail(input.email())
-                .setPassword(passwordEncoder.encode(input.password()));
+        Compte compte = new Compte();
+        compte.setCptMail(input.email());
+        compte.setCptPseudo(input.fullName());
+        compte.setCptMdp(passwordEncoder.encode(input.password()));
 
-        return userRepository.save(user);
+        return compteRepository.save(compte);
     }
 
     /**
@@ -84,7 +86,7 @@ public class AuthenticationService {
                 )
         );
 
-        return userRepository.findByEmail(input.email())
+        return compteRepository.findByCptMail(input.email())
                 .orElseThrow();
     }
 }

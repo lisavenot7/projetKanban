@@ -3,6 +3,7 @@ package com.controllers;
 import com.dtos.LoginResponse;
 import com.dtos.LoginUserDto;
 import com.dtos.RegisterUserDto;
+import com.entities.Compte;
 import com.entities.User;
 import com.security.JwtService;
 import com.services.impl.AuthenticationService;
@@ -43,8 +44,8 @@ public class AuthController {
      * @return L'utilisateur créé
      */
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
-        User registeredUser = authenticationService.signup(registerUserDto);
+    public ResponseEntity<Compte> register(@RequestBody RegisterUserDto registerUserDto) {
+        Compte registeredUser = authenticationService.signup(registerUserDto);
 
         return ResponseEntity.ok(registeredUser);
     }

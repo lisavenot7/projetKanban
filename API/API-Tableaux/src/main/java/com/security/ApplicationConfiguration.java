@@ -1,6 +1,6 @@
 package com.security;
 
-import com.repositories.UserRepository;
+import com.repositories.CompteRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,15 +13,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class ApplicationConfiguration {
-    private final UserRepository userRepository;
+    private final CompteRepository compteRepository;
 
-    public ApplicationConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ApplicationConfiguration(CompteRepository compteRepository) {
+        this.compteRepository = compteRepository;
     }
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
+        return username -> compteRepository.findByCptMail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
