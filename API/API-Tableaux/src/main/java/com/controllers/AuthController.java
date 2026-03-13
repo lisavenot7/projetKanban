@@ -75,7 +75,7 @@ public class AuthController {
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
-        Optional<Compte> compte = compteRepository.findByCptMail(authenticatedUser.getUsername());
+        Optional<Compte> compte = compteRepository.findByCptMail(loginUserDto.email());
         if (compte.isPresent()) {
             loginResponse.setIsAdmin(compte.get().getCptIsAdmin());
             loginResponse.setCptId(compte.get().getCptId());
