@@ -34,7 +34,7 @@ const valider = async () => {
         <button class="boutonsNav" @click="valider">Valider</button> 
         <button class="boutonsNav" @click="annuler">Annuler</button>
       </div>
-      <h2 v-if="error" class="error">&nbsp{{ error }}</h2>
+      <p v-if="error" class="error">&nbsp{{ error }}</p>
     </div>
   </div>
 </template>
