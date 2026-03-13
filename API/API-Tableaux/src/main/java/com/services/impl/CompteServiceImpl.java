@@ -72,9 +72,7 @@ public class CompteServiceImpl implements CompteService {
         if (compteDto.getCptMail() != null) {
             compte.setCptMail(compteDto.getCptMail());
         }
-        if (compteDto.getCptPseudo() != null) {
-            compte.setCptPseudo(compteDto.getCptPseudo());
-        }
+
         if (compteDto.getCptMdp() != null) {
             compte.setCptMdp(compteDto.getCptMdp());
         }
