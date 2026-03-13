@@ -4,8 +4,9 @@ import com.dtos.LoginResponse;
 import com.dtos.LoginUserDto;
 import com.dtos.RegisterUserDto;
 import com.entities.Compte;
-import com.entities.User;
+import com.repositories.CompteRepository;
 import com.security.JwtService;
+import com.services.CompteService;
 import com.services.impl.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final CompteRepository compteRepository;
 
     /**
      * Constructeur du contrôleur d'authentification.
@@ -26,9 +30,10 @@ public class AuthController {
      * @param jwtService Le service de gestion des JWT
      * @param authenticationService Le service d'authentification
      */
-    public AuthController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthController(JwtService jwtService, AuthenticationService authenticationService, CompteRepository compteRepository) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.compteRepository = compteRepository;
     }
 
     /**
@@ -70,6 +75,11 @@ public class AuthController {
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+        Optional<Compte> compte = compteRepository.findByCptMail(authenticatedUser.getUsername());
+        if (compte.isPresent()) {
+            loginResponse.setIsAdmin(compte.get().getCptIsAdmin());
+            loginResponse.setCptId(compte.get().getCptId());
+        }
 
         return ResponseEntity.ok(loginResponse);
     }
