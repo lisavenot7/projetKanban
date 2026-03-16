@@ -27,7 +27,7 @@ public class LoginResponse {
         return this;
     }
 
-    public int isAdmin() {
+    public int getIsAdmin() {
         return isAdmin;
     }
 
