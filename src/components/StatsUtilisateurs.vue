@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref,computed,onMounted } from 'vue'
 import { Doughnut } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -30,9 +30,8 @@ const dataActif = computed(() => ({
 }))
 
 // Données camembert admin/utilisateurs
-const adminCount = computed(() => usersData.filter(u => u.isAdmin === 1).length)
-const utilCount = computed(() => usersData.filter(u => u.isAdmin === 0).length)
-
+const adminCount = ref('')
+const utilCount = ref('')
 const dataRole = computed(() => ({
   labels: ['Admin', 'Utilisateurs'],
   datasets: [
@@ -43,6 +42,36 @@ const dataRole = computed(() => ({
     }
   ]
 }))
+const token = localStorage.getItem("jwtToken")
+const users = ref([])
+async function fetchUsers() {
+  try {
+    const response = await fetch("http://localhost:10056/comptes", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération utilisateurs", response.status)
+      return
+    }
+    const res = await response.json()
+    users.value = res.data
+
+    adminCount.value = users.value.filter(user => user.cptIsAdmin === 1).length
+    utilCount.value = users.value.filter(user => user.cptIsAdmin === 0).length
+
+  } catch (err) {
+    console.error("Impossible de récupérer les utilisateurs", err)
+  }
+}
+
+onMounted(() => {
+  fetchUsers()
+})
 </script>
 
 <template>

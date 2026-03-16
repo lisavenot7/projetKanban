@@ -14,7 +14,6 @@ onMounted(() => {
   if (!token) {
     router.push("/connexion")
   }
-  console.log(admin)
   if (admin === "1") {
     router.push("/admin")
   }

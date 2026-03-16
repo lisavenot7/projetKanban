@@ -2,8 +2,9 @@
 <script setup>
 import Navbar from "../components/NavbarAdmin.vue"
 import NavbarUtilisateur from "../components/NavbarUtilisateur.vue"
+
 import { useRouter ,useRoute} from "vue-router"
-import usersData from '../bdd/users.json'
+import { ref,onMounted } from "vue"
 
 const router = useRouter()
 const route = useRoute()
@@ -16,9 +17,38 @@ const goToModifie = () => {
   }
 }
 
-const pseudo = "robertD"
+const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
+onMounted(() => {
+  if (!token) {
+    router.push("/connexion")
+  }
+  monProfil()
+})
 
-const user = usersData.find(u => u.pseudo === pseudo) || {}
+const user=ref('')
+
+async function monProfil() {
+  try {
+    const response = await fetch(`http://localhost:10056/comptes/${idUser}`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération profil", response.status)
+      return
+    }
+    const res = await response.json()
+    user.value = res.data
+  } catch (err) {
+    console.error("Impossible de récupérer le profil", err)
+  }
+}
+
 </script>
 
 <template>
@@ -30,8 +60,8 @@ const user = usersData.find(u => u.pseudo === pseudo) || {}
 
       <h3>Nom: {{ user.nom }}</h3>
       <h3>Prénom: {{ user.prenom }}</h3>
-      <h3>Mail: {{ user.mail }}</h3>
-      <h3 v-if="user.isAdmin === 1">Rôle: Administrateur</h3>
+      <h3>Mail: {{ user.cptMail }}</h3>
+      <h3 v-if="user.cptIsAdmin === 1">Rôle: Administrateur</h3>
       <h3 v-else>Rôle: Utilisateur</h3>
       <button class="boutonsNav" @click="goToModifie">Modifier</button>
     </div>

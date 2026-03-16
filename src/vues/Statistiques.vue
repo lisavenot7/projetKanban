@@ -2,16 +2,55 @@
 <script setup>
 import Navbar from "../components/NavbarAdmin.vue"
 import Bandeau from "../components/BandeauAdmin.vue"
-
 import StatsChart from '../components/StatsUtilisateurs.vue'
 
-import {ref,computed} from 'vue'
+import { ref,computed,onMounted } from 'vue'
+
+const users = ref([])
+const token = localStorage.getItem("jwtToken")
+
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "0") {
+    router.push("/private")
+  }
+  fetchUsers()
+})
+
+async function fetchUsers() {
+  try {
+    const response = await fetch("http://localhost:10056/comptes", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération utilisateurs", response.status)
+      return
+    }
+    const res = await response.json()
+    users.value = res.data
+
+    nbComptes.value = users.value.length 
+    nbAdmin.value = users.value.filter(user => user.cptIsAdmin === 1).length
+    nbUtil.value = users.value.filter(user => user.cptIsAdmin === 0).length
+
+  } catch (err) {
+    console.error("Impossible de récupérer les utilisateurs", err)
+  }
+}
+
+const nbComptes = ref('')
+const nbAdmin = ref('')
+const nbUtil = ref('')
 
 import usersData from '../bdd/users.json'
-
-const nbComptes = computed(() => usersData.length)
-const nbAdmin = computed(() => usersData.filter(user => user.isAdmin === 1).length)
-const nbUtil = computed(() => usersData.filter(user => user.isAdmin === 0).length)
 const nbAct = computed(() => usersData.filter(user => user.actif === 1).length)
 const nbDes = computed(() => usersData.filter(user => user.actif === 0).length)
 
