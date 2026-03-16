@@ -22,9 +22,9 @@ public class ModifCompteDto {
     private String nom;
     private String prenom;
 
-    private int cptIsActive;
+    private Integer cptIsActive;
 
-    private int cptIsAdmin; // pas besoin de @NotNull, boolean primitif
+    private Integer cptIsAdmin; // pas besoin de @NotNull, boolean primitif
 
     private List<TableauDto> tableauxCrees; // tableaux créés par ce compte
 
