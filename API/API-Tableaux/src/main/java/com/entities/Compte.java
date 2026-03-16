@@ -29,6 +29,14 @@ public class Compte implements UserDetails {
     private String cptMdp;
     private int cptIsAdmin;
 
+    public int getIsAdmin() {
+        return cptIsAdmin;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "usrId") // clé étrangère
+    private User user;
+
     // Tableaux auxquels le compte participe
     @ManyToMany
     @JoinTable(
