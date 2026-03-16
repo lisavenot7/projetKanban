@@ -67,6 +67,7 @@ public class AuthenticationService {
         compte.setCptMail(input.email());
         compte.setCptMdp(passwordEncoder.encode(input.password()));
         compte.setUser(user);
+        compte.setCptIsActive(1);
 
         userRepository.save(user);
         return compteRepository.save(compte);

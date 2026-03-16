@@ -26,7 +26,7 @@ public class CompteUserMapper {
         dto.setNom(compte.getUser().getNom());
         dto.setPrenom(compte.getUser().getPrenom());
         dto.setCptIsAdmin(compte.getCptIsAdmin());
-
+        dto.setCptIsActive(compte.getCptIsActive());
 
         if (compte.getTableauxCrees() != null) {
             List<TableauDto> tableauDtos = compte.getTableauxCrees().stream()
