@@ -12,12 +12,8 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 
-import usersData from '../bdd/users.json'
-
-// Données camembert comptes actifs/désactivés
-const actifCount = computed(() => usersData.filter(u => u.actif === 1).length)
-const desactiveCount = computed(() => usersData.filter(u => u.actif === 0).length)
-
+const actifCount = ref('')
+const desactiveCount = ref('')
 const dataActif = computed(() => ({
   labels: ['Activés', 'Désactivés'],
   datasets: [
@@ -29,7 +25,6 @@ const dataActif = computed(() => ({
   ]
 }))
 
-// Données camembert admin/utilisateurs
 const adminCount = ref('')
 const utilCount = ref('')
 const dataRole = computed(() => ({
@@ -63,6 +58,8 @@ async function fetchUsers() {
 
     adminCount.value = users.value.filter(user => user.cptIsAdmin === 1).length
     utilCount.value = users.value.filter(user => user.cptIsAdmin === 0).length
+    actifCount.value = users.value.filter(user => user.cptIsActive === 1).length
+    desactiveCount.value = users.value.filter(user => user.cptIsActive === 0).length
 
   } catch (err) {
     console.error("Impossible de récupérer les utilisateurs", err)

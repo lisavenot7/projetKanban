@@ -62,7 +62,7 @@
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">4.029s</div>
+<div class="counter">3.976s</div>
 <p>duration</p>
 </div>
 </td>
@@ -99,7 +99,7 @@
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td>0.328s</td>
+<td>0.364s</td>
 <td class="success">100%</td>
 </tr>
 </table>
@@ -108,8 +108,8 @@
 <div class="tab">
 <h2>standard output</h2>
 <span class="code">
-<pre id="root-0-test-stdout-com.example.apitableaux.ApiTableauxApplicationTests">11:42:53.277 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.apitableaux.ApiTableauxApplicationTests]: ApiTableauxApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-11:42:53.383 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.App for test class com.example.apitableaux.ApiTableauxApplicationTests
+<pre id="root-0-test-stdout-com.example.apitableaux.ApiTableauxApplicationTests">16:03:05.346 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.apitableaux.ApiTableauxApplicationTests]: ApiTableauxApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:03:05.441 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.App for test class com.example.apitableaux.ApiTableauxApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -120,24 +120,24 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-03-16T11:42:53.618+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : Starting ApiTableauxApplicationTests using Java 21.0.7 with PID 45876 (started by lisa.venot in /home2/etudiants/master1/lisa.venot/Bureau/projetKanban/API/API-Tableaux)
-2026-03-16T11:42:53.619+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2026-03-16T11:42:54.480+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-16T11:42:54.652+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 167 ms. Found 5 JPA repository interfaces.
-2026-03-16T11:42:55.025+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-03-16T11:42:55.061+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-03-16T11:42:55.086+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-03-16T11:42:55.271+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-03-16T11:42:55.289+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-03-16T11:42:55.350+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@35599228
-2026-03-16T11:42:55.352+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-03-16T11:42:55.369+01:00  WARN 45876 --- [API-Tableaux] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-03-16T11:42:55.945+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-03-16T11:42:55.977+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-03-16T11:42:56.216+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-03-16T11:42:56.217+01:00  WARN 45876 --- [API-Tableaux] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
-2026-03-16T11:42:56.370+01:00  WARN 45876 --- [API-Tableaux] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-03-16T11:42:56.883+01:00  INFO 45876 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : Started ApiTableauxApplicationTests in 3.409 seconds (process running for 4.091)
+2026-03-16T16:03:05.690+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : Starting ApiTableauxApplicationTests using Java 21.0.7 with PID 20765 (started by lisa.venot in /home2/etudiants/master1/lisa.venot/Bureau/projetKanban/API/API-Tableaux)
+2026-03-16T16:03:05.691+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2026-03-16T16:03:06.464+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-16T16:03:06.618+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 150 ms. Found 5 JPA repository interfaces.
+2026-03-16T16:03:06.967+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-16T16:03:07.012+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-03-16T16:03:07.039+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-16T16:03:07.225+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-16T16:03:07.251+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-16T16:03:07.311+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@4fb42efa
+2026-03-16T16:03:07.313+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-16T16:03:07.330+01:00  WARN 20765 --- [API-Tableaux] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-16T16:03:07.942+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-16T16:03:07.983+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-16T16:03:08.211+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-16T16:03:08.211+01:00  WARN 20765 --- [API-Tableaux] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-03-16T16:03:08.343+01:00  WARN 20765 --- [API-Tableaux] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-16T16:03:08.816+01:00  INFO 20765 --- [API-Tableaux] [    Test worker] c.e.a.ApiTableauxApplicationTests        : Started ApiTableauxApplicationTests in 3.27 seconds (process running for 4.076)
 </pre>
 <button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-com.example.apitableaux.ApiTableauxApplicationTests">Copy</button>
 </span>
@@ -152,7 +152,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.3.1</a> at 16 mars 2026, 11:42:57</p>
+<a href="https://www.gradle.org">Gradle 9.3.1</a> at 16 mars 2026, 16:03:09</p>
 </div>
 </div>
 </body>

@@ -48,14 +48,14 @@ async function fetchUsers() {
 
 async function modifEtat(user) {
   try {
-    const payload = { cptIsActive: user.cptIsActive === 1 ? 0 : 1 }
+    const etat = Number(!user.cptIsActive )
     const response = await fetch(`http://localhost:10056/comptes/${user.cptId}`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload) // envoyer le DTO avec le nouvel état
+      body: JSON.stringify({"cptIsActive": etat}) 
     });
     if (!response.ok) {
       console.error("Erreur lors du changement d'état", response.status);

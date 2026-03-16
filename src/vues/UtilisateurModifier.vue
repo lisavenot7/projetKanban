@@ -2,7 +2,7 @@
 <script setup>
 import Navbar from "../components/NavbarAdmin.vue"
 import { useRouter ,useRoute} from "vue-router"
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import usersData from '../bdd/users.json'
 
@@ -35,6 +35,16 @@ const valider = async () => {
   router.push("/admin/utilisateurs")
 }
 
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "0") {
+    router.push("/private")
+  }
+})
 </script>
 
 <template>

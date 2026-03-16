@@ -40,7 +40,8 @@ async function fetchUsers() {
     nbComptes.value = users.value.length 
     nbAdmin.value = users.value.filter(user => user.cptIsAdmin === 1).length
     nbUtil.value = users.value.filter(user => user.cptIsAdmin === 0).length
-
+    nbAct.value = users.value.filter(user => user.cptIsActive === 1).length
+    nbDes.value = users.value.filter(user => user.cptIsActive === 0).length
   } catch (err) {
     console.error("Impossible de récupérer les utilisateurs", err)
   }
@@ -49,10 +50,8 @@ async function fetchUsers() {
 const nbComptes = ref('')
 const nbAdmin = ref('')
 const nbUtil = ref('')
-
-import usersData from '../bdd/users.json'
-const nbAct = computed(() => usersData.filter(user => user.actif === 1).length)
-const nbDes = computed(() => usersData.filter(user => user.actif === 0).length)
+const nbAct = ref('')
+const nbDes = ref('')
 
 const showUserStat = ref(false)
 const toggleUserStat = () => {
