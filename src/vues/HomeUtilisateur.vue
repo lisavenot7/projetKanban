@@ -3,8 +3,22 @@
 import Navbar from "../components/NavbarUtilisateur.vue"
 import Bandeau from "../components/BandeauUtilisateur.vue"
 
-import {ref,computed} from 'vue'
+import { useRouter } from "vue-router"
+import { onMounted } from "vue"
 
+const router = useRouter()
+
+onMounted(() => {
+  const token = localStorage.getItem("jwtToken")
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  console.log(admin)
+  if (admin === "1") {
+    router.push("/admin")
+  }
+})
 </script>
 
 <template>

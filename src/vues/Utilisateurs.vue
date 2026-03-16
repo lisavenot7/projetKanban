@@ -20,11 +20,13 @@ if (!token) {
 async function fetchUsers() {
   try {
     const response = await fetch("http://localhost:10056/comptes", {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
+  method: "GET",
+  headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  },
+  credentials: "include" // utile si allowCredentials(true)
+});
     if (!response.ok) {
       console.error("Erreur récupération utilisateurs", response.status)
       return

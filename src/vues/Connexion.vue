@@ -37,10 +37,19 @@ const login = async () => {
     }
 
     const data = await response.json()
-    console.log("Connecté", data)
+    
     localStorage.setItem("jwtToken", data.token)
-
-    router.push("/admin") 
+    localStorage.setItem("cptId", data.cptId)
+    localStorage.setItem("isAdmin", data.isAdmin)
+    
+    const isAdmin = parseInt(localStorage.getItem("isAdmin"))
+    
+    if (isAdmin === 0) {
+      router.push("/private")
+    } else {
+      router.push("/admin")
+    }
+    
   } catch (err) {
     console.error(err)
     error.value = "Impossible de contacter le serveur"
