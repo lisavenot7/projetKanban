@@ -1,18 +1,20 @@
 package com.services;
 
 import com.dtos.CompteDto;
+import com.dtos.ModifCompteDto;
+import com.entities.Compte;
 
 import java.util.List;
 
 public interface CompteService {
 
-    CompteDto saveCompte(CompteDto CompteDto);
+    Compte saveCompte(CompteDto CompteDto);
 
-    CompteDto getCompteById(Long CompteId);
+    Compte getCompteById(Long CompteId);
 
     boolean deleteCompte(Long CompteId);
 
-    List<CompteDto> getAllComptes();
+    List<Compte> getAllComptes();
 
-    CompteDto updateCompte(Long CompteId, CompteDto CompteDto);
+    Compte updateCompte(Long compteId, ModifCompteDto modifcompteDto);
 }
