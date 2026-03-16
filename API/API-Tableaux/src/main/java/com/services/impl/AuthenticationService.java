@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final CompteRepository compteRepository;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -37,8 +38,9 @@ public class AuthenticationService {
      * @param passwordEncoder L'encodeur de mots de passe
      * @param authenticationManager Le gestionnaire d'authentification
      */
-    public AuthenticationService(CompteRepository compteRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthenticationService(CompteRepository compteRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.compteRepository = compteRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
@@ -57,10 +59,16 @@ public class AuthenticationService {
      */
     public Compte signup(RegisterUserDto input) {
 
+        User user = new User();
+        user.setNom(input.nom());
+        user.setPrenom(input.prenom());
+
         Compte compte = new Compte();
         compte.setCptMail(input.email());
         compte.setCptMdp(passwordEncoder.encode(input.password()));
+        compte.setUser(user);
 
+        userRepository.save(user);
         return compteRepository.save(compte);
     }
 

@@ -11,15 +11,16 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompteDto {
+public class ModifCompteDto {
 
     private Long cptId; // optionnel pour création
 
-    @NotNull
     private String cptMail;
 
-    @NotNull
     private String cptMdp;
+
+    private String nom;
+    private String prenom;
 
     private int cptIsAdmin; // pas besoin de @NotNull, boolean primitif
 

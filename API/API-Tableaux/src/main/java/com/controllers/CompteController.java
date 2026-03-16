@@ -1,8 +1,11 @@
 package com.controllers;
 
 import com.dtos.CompteDto;
+import com.dtos.CompteUserResponse;
 import com.dtos.DisplayResponseDto;
+import com.dtos.ModifCompteDto;
 import com.entities.Compte;
+import com.mappers.CompteUserMapper;
 import com.services.CompteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,23 +19,23 @@ import java.util.List;
 public class CompteController {
 
     private final CompteService compteService;
+    private final CompteUserMapper compteUserMapper;
 
-    public CompteController(CompteService compteService) {
+    public CompteController(CompteService compteService, CompteUserMapper compteUserMapper) {
         this.compteService = compteService;
+        this.compteUserMapper = compteUserMapper;
     }
 
     // ENDPOINT POUR LE COMPTE COURANT
     @GetMapping("/me")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public Compte getCurrentCompte() {
         return (Compte) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     // GET ALL
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public DisplayResponseDto<List<CompteDto>> getComptes() {
-        DisplayResponseDto<List<CompteDto>> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<List<Compte>> getComptes() {
+        DisplayResponseDto<List<Compte>> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("collection");
         displayResponseDto.setData(compteService.getAllComptes());
@@ -41,21 +44,20 @@ public class CompteController {
 
     // GET BY ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public DisplayResponseDto<CompteDto> getCompte(@PathVariable Long id) {
-        DisplayResponseDto<CompteDto> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<CompteUserResponse> getCompte(@PathVariable Long id) {
+        DisplayResponseDto<CompteUserResponse> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
-        displayResponseDto.setData(compteService.getCompteById(id));
+        CompteUserResponse compteUserResponse = compteUserMapper.toDto(compteService.getCompteById(id));
+        displayResponseDto.setData(compteUserResponse);
         return displayResponseDto;
     }
 
     // CREATE
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<CompteDto> saveCompte(@RequestBody CompteDto compteDto) {
-        DisplayResponseDto<CompteDto> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<Compte> saveCompte(@RequestBody CompteDto compteDto) {
+        DisplayResponseDto<Compte> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
         displayResponseDto.setData(compteService.saveCompte(compteDto));
@@ -64,21 +66,20 @@ public class CompteController {
 
     // UPDATE
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<CompteDto> updateCompte(@PathVariable Long id, @RequestBody CompteDto compteDto) {
-        DisplayResponseDto<CompteDto> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<Compte> updateCompte(@PathVariable Long id, @RequestBody ModifCompteDto modifcompteDto) {
+        DisplayResponseDto<Compte> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
-        displayResponseDto.setData(compteService.updateCompte(id, compteDto));
+        displayResponseDto.setData(compteService.updateCompte(id, modifcompteDto));
         return displayResponseDto;
     }
 
     // DELETE
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Boolean deleteCompte(@PathVariable Long id) {
+
         return compteService.deleteCompte(id);
     }
 }
