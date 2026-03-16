@@ -34,8 +34,8 @@ public class CompteController {
 
     // GET ALL
     @GetMapping
-    public DisplayResponseDto<List<Compte>> getComptes() {
-        DisplayResponseDto<List<Compte>> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<List<CompteUserResponse>> getComptes() {
+        DisplayResponseDto<List<CompteUserResponse>> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("collection");
         displayResponseDto.setData(compteService.getAllComptes());
@@ -48,7 +48,7 @@ public class CompteController {
         DisplayResponseDto<CompteUserResponse> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
-        CompteUserResponse compteUserResponse = compteUserMapper.toDto(compteService.getCompteById(id));
+        CompteUserResponse compteUserResponse = compteService.getCompteById(id);
         displayResponseDto.setData(compteUserResponse);
         return displayResponseDto;
     }
@@ -67,8 +67,8 @@ public class CompteController {
     // UPDATE
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<Compte> updateCompte(@PathVariable Long id, @RequestBody ModifCompteDto modifcompteDto) {
-        DisplayResponseDto<Compte> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<CompteUserResponse> updateCompte(@PathVariable Long id, @RequestBody ModifCompteDto modifcompteDto) {
+        DisplayResponseDto<CompteUserResponse> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
         displayResponseDto.setData(compteService.updateCompte(id, modifcompteDto));

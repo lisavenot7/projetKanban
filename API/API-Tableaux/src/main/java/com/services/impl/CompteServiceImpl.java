@@ -2,11 +2,13 @@ package com.services.impl;
 
 
 import com.dtos.CompteDto;
+import com.dtos.CompteUserResponse;
 import com.dtos.ModifCompteDto;
 import com.entities.Compte;
 import com.entities.Tableau;
 import com.entities.User;
 import com.mappers.CompteMapper;
+import com.mappers.CompteUserMapper;
 import com.repositories.CompteRepository;
 import com.repositories.TableauRepository;
 import com.repositories.UserRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +33,15 @@ public class CompteServiceImpl implements CompteService {
     private final CompteMapper compteMapper;
 
     private final TableauService tableauService;
+    private final CompteUserMapper compteUserMapper;
 
-    public CompteServiceImpl(CompteRepository compteRepository, UserRepository userRepository, TableauRepository tableauRepository, CompteMapper compteMapper, TableauService tableauService) {
+    public CompteServiceImpl(CompteRepository compteRepository, UserRepository userRepository, TableauRepository tableauRepository, CompteMapper compteMapper, TableauService tableauService, CompteUserMapper compteUserMapper) {
         this.compteRepository = compteRepository;
         this.userRepository = userRepository;
         this.tableauRepository = tableauRepository;
         this.compteMapper = compteMapper;
         this.tableauService = tableauService;
+        this.compteUserMapper = compteUserMapper;
     }
 
     @Override
@@ -47,10 +52,13 @@ public class CompteServiceImpl implements CompteService {
 
     @Override
     @Transactional(readOnly = true)
-    public Compte getCompteById(Long compteId) {
-        return compteRepository.findById(compteId)
+    public CompteUserResponse getCompteById(Long compteId) {
+
+        Compte compte = compteRepository.findById(compteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Le compte avec l'ID %d n'existe pas", compteId)));
+
+        return compteUserMapper.toDto(compte);
     }
 
     @Override
@@ -68,12 +76,16 @@ public class CompteServiceImpl implements CompteService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Compte> getAllComptes() {
-        return compteRepository.findAll();
+    public List<CompteUserResponse> getAllComptes() {
+        List<Compte> comptes = compteRepository.findAll();
+
+        return comptes.stream()
+                .map(compteUserMapper::toDto)
+                .toList();
     }
 
     @Override
-    public Compte updateCompte(Long compteId, ModifCompteDto modifcompteDto) {
+    public CompteUserResponse updateCompte(Long compteId, ModifCompteDto modifcompteDto) {
         Compte compte = compteRepository.findById(compteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Le compte avec l'ID %d n'existe pas", compteId)));
@@ -110,6 +122,6 @@ public class CompteServiceImpl implements CompteService {
             });
         }
 
-        return compteRepository.save(compte);
+        return compteUserMapper.toDto(compteRepository.save(compte));
     }
 }

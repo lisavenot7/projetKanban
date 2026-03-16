@@ -1,6 +1,7 @@
 package com.services;
 
 import com.dtos.CompteDto;
+import com.dtos.CompteUserResponse;
 import com.dtos.ModifCompteDto;
 import com.entities.Compte;
 
@@ -10,11 +11,11 @@ public interface CompteService {
 
     Compte saveCompte(CompteDto CompteDto);
 
-    Compte getCompteById(Long CompteId);
+    CompteUserResponse getCompteById(Long CompteId);
 
     boolean deleteCompte(Long CompteId);
 
-    List<Compte> getAllComptes();
+    List<CompteUserResponse> getAllComptes();
 
-    Compte updateCompte(Long compteId, ModifCompteDto modifcompteDto);
+    CompteUserResponse updateCompte(Long compteId, ModifCompteDto modifcompteDto);
 }
