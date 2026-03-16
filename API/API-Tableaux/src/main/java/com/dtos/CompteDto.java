@@ -23,6 +23,8 @@ public class CompteDto {
 
     private int cptIsAdmin; // pas besoin de @NotNull, boolean primitif
 
+    private int cptIsActive;
+
     private List<TableauDto> tableauxCrees; // tableaux créés par ce compte
 
     private Set<Long> tableauIds; // IDs des tableaux auxquels le compte participe

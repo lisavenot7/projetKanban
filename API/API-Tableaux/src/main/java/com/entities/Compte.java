@@ -28,6 +28,7 @@ public class Compte implements UserDetails {
 
     private String cptMdp;
     private int cptIsAdmin;
+    private int cptIsActive;
 
     public int getIsAdmin() {
         return cptIsAdmin;
@@ -86,6 +87,6 @@ public class Compte implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return cptIsActive==1;
     }
 }
