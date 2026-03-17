@@ -56,7 +56,7 @@ public class CompteServiceImpl implements CompteService {
     public CompteUserResponse createCompte(CreateCompteUserDto createCompteUserDto) {
         Compte compte = new Compte();
         compte.setCptMail(createCompteUserDto.email());
-        compte.setCptMdp(passwordEncoder.encode(createCompteUserDto.email()));
+        compte.setCptMdp(passwordEncoder.encode(createCompteUserDto.password()));
         compte.setCptIsAdmin(createCompteUserDto.isAdmin().intValue());
         compte.setCptIsActive(1);
 
