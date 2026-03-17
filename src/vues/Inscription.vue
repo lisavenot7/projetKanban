@@ -12,9 +12,15 @@ const mail = ref("")
 const password = ref("")
 const confirmPassword = ref("")
 
-
 const error = ref("")
 
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+const isStrongPassword = (password) => {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/.test(password)
+}
 
 const annuler = async () => {
   router.push("/")
@@ -31,6 +37,16 @@ const valider = async () => {
     error.value = "Les champs doivent être remplis"
     return
   }
+
+  if (!isValidEmail(mail.value)) {
+    error.value = "Le format du mail est invalide"
+    return
+  }
+
+  if (!isStrongPassword(password.value)) {
+  error.value = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un caractère spécial"
+  return
+}
 
   if (password.value !== confirmPassword.value) {
     error.value = "Les mots de passe ne correspondent pas"
@@ -82,7 +98,7 @@ const togglePassword2 = () => {
       <h1>S'inscrire</h1>
       <input v-model="nom" placeholder="Nom" />
       <input v-model="prenom" placeholder="Prenom" />
-      <input v-model="mail" placeholder="Mail" />
+      <input v-model="mail" type="email" placeholder="Mail" />
 
       <div class="input-password">
         <input
