@@ -1,10 +1,11 @@
-package com.entities;
+package com.dtos;
 
 import jakarta.persistence.Id;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "commentaires")
-public class Commentaire {
+@Data
+public class CommentaireDto {
 
     @Id
     private String id;

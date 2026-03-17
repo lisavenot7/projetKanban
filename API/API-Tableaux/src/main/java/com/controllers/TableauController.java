@@ -87,8 +87,8 @@ public class TableauController {
 
     @PostMapping("/{id}/colonnes")
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<TableauDto> saveColonne(@PathVariable Long id, final @RequestBody ColonneDto colonneDto) {
-        DisplayResponseDto<TableauDto> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<ColonneDto> saveColonne(@PathVariable Long id, @RequestBody ColonneDto colonneDto) {
+        DisplayResponseDto<ColonneDto> displayResponseDto = new DisplayResponseDto<>();
 
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");

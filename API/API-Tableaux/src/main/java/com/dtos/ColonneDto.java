@@ -14,10 +14,8 @@ public class ColonneDto {
 
     private Long clnId; // optionnel à la création
 
-    @NotNull
     private String clnNom;
 
-    @NotNull
     private Long tabId; // ID du tableau auquel la colonne appartient
 
     // Optionnel : inclure les tâches

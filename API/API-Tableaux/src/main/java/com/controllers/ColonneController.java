@@ -74,8 +74,8 @@ public class ColonneController {
 
     @PostMapping("/{id}/taches")
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<TableauDto> saveTache(@PathVariable Long id, final @RequestBody TacheDto tacheDto) {
-        DisplayResponseDto<TableauDto> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<TacheDto> saveTache(@PathVariable Long id, @RequestBody TacheDto tacheDto) {
+        DisplayResponseDto<TacheDto> displayResponseDto = new DisplayResponseDto<>();
 
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");

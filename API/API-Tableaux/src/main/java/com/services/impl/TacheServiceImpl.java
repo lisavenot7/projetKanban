@@ -129,19 +129,20 @@ public class TacheServiceImpl implements TacheService {
     }
 
     @Override
-    public TableauDto createTache(Long colonneId, TacheDto tacheDto) {
+    public TacheDto createTache(Long colonneId, TacheDto tacheDto) {
+
         // 1. Récupérer la colonne
         Colonne colonne = colonneRepository.findById(colonneId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "La colonne avec l'ID " + colonneId + " n'existe pas"));
 
-        // 2. Convertir le DTO en entité
+        // 2. Convertir DTO → Entity
         Tache tache = tacheMapper.toEntity(tacheDto);
 
         // 3. Associer la colonne
         tache.setColonne(colonne);
 
-        // 4. Associer le compte si fourni
+        // 4. Associer le compte si présent
         if (tacheDto.getCompteId() != null) {
             Compte compte = compteRepository.findById(tacheDto.getCompteId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -149,18 +150,10 @@ public class TacheServiceImpl implements TacheService {
             tache.setCompteAttribue(compte);
         }
 
-        // 5. Ajouter la tâche à la liste de la colonne (optionnel mais conseillé)
-        if (colonne.getTaches() != null) {
-            colonne.getTaches().add(tache);
-        }
-
-        // 6. Sauvegarder la tâche
+        // 5. Sauvegarder la tâche
         Tache tacheCree = tacheRepository.save(tache);
 
-        // 7. Retourner le DTO
-
-        return tableauMapper.toDto(tableauRepository.findById(colonne.getTableau().getTabId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Le compte avec l'ID " + tacheDto.getCompteId() + " n'existe pas")));
+        // 6. Retourner le DTO
+        return tacheMapper.toDto(tacheCree);
     }
 }

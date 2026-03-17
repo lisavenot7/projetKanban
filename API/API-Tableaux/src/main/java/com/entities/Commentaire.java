@@ -1,10 +1,16 @@
 package com.entities;
 
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "commentaires")
-public class Commentaires {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Commentaire {
 
     @Id
     private String id;

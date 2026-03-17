@@ -6,7 +6,7 @@ services:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: tableau_db
     volumes:
-      - tableau_data:/var/lib/mysql
+      - tableau_data_maria:/var/lib/mysql
     ports:
       - "10057:3306"
     healthcheck:
@@ -14,6 +14,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
+
+  mongo:
+    image: mongo:7
+    container_name: mongodb-api-tableau
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - tableau_data_mongo:/data/db
+    ports:
+      - "10058:27017"
     restart: always
 
   app:
@@ -24,15 +36,19 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+      mongo:
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/tableau_db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SHOW_SQL=false
       - DDL_AUTO=update
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongo:27017/commentaire_db?authSource=admin
     restart: always
 
 volumes:
-  tableau_data:
+  tableau_data_mongo:
+  tableau_data_maria:
 
 

@@ -15,5 +15,5 @@ public interface ColonneService {
 
     ColonneDto updateColonne(Long ColonneId, ColonneDto ColonneDto);
 
-    TableauDto createColonne(Long id, ColonneDto colonneDto);
+    ColonneDto createColonne(Long id, ColonneDto colonneDto);
 }

@@ -1,117 +1,139 @@
 package com.services.impl;
 
-import com.dtos.ColonneDto;
-import com.dtos.TableauDto;
-import com.entities.Colonne;
-import com.entities.Tableau;
-import com.mappers.TableauMapper;
+import com.dtos.CommentaireDto;
+import com.entities.Commentaire;
+import com.mappers.CommentaireMapper;
+import com.repositories.CommentaireRepository;
 import com.repositories.CompteRepository;
-import com.repositories.TableauRepository;
-import com.services.TableauService;
+import com.repositories.TacheRepository;
+import com.services.CommentaireService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service("TableauService")
-@Transactional
-public class TableauServiceImpl implements TableauService {
+@Service
+public class CommentaireServiceImpl implements CommentaireService {
 
-    private final TableauRepository tableauRepository;
+    private final CommentaireRepository commentaireRepository;
+    private final TacheRepository tacheRepository;
     private final CompteRepository compteRepository;
 
-    private final TableauMapper tableauMapper;
-
-    public TableauServiceImpl(TableauRepository tableauRepository, TableauMapper tableauMapper, CompteRepository compteRepository) {
-        this.tableauRepository = tableauRepository;
-        this.tableauMapper = tableauMapper;
+    public CommentaireServiceImpl(CommentaireRepository commentaireRepository, TacheRepository tacheRepository, CompteRepository compteRepository) {
+        this.commentaireRepository = commentaireRepository;
+        this.tacheRepository = tacheRepository;
         this.compteRepository = compteRepository;
     }
 
     @Override
-    public TableauDto saveTableau(TableauDto tableauDto) {
-        var tableau = tableauMapper.toEntity(tableauDto);
-        var savedTableau = tableauRepository.save(tableau);
-        return tableauMapper.toDto(savedTableau);
+    public CommentaireDto saveCommentaire(CommentaireDto commentaireDto) {
+
+        Commentaire commentaire = CommentaireMapper.toEntity(commentaireDto);
+
+        Commentaire savedCommentaire = commentaireRepository.save(commentaire);
+
+        return CommentaireMapper.toDto(savedCommentaire);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public TableauDto getTableauById(Long tableauId) {
-        var tableau = tableauRepository.findById(tableauId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("La tableau avec l'ID %d n'existe pas", tableauId)));
-        return tableauMapper.toDto(tableau);
+    public CommentaireDto getCommentaireById(String commentaireId) {
+
+        Commentaire commentaire = commentaireRepository.findById(commentaireId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Le commentaire avec l'ID %s n'existe pas", commentaireId)
+                ));
+
+        return CommentaireMapper.toDto(commentaire);
     }
 
     @Override
-    public boolean deleteTableau(Long tableauId) {
-        var tableau = tableauRepository.findById(tableauId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("La tableau avec l'ID %d n'existe pas", tableauId)));
-        tableauRepository.deleteById(tableau.getTabId());
+    public boolean deleteCommentaire(String commentaireId) {
+
+        Commentaire commentaire = commentaireRepository.findById(commentaireId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Le commentaire avec l'ID %s n'existe pas", commentaireId)
+                ));
+
+        commentaireRepository.deleteById(commentaire.getId());
+
         return true;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<TableauDto> getAllTableaux() {
-        return tableauRepository.findAll().stream()
-                .map(tableauMapper::toDto)
+    public List<CommentaireDto> getAllCommentaires() {
+
+        return commentaireRepository.findAll()
+                .stream()
+                .map(CommentaireMapper::toDto)
                 .toList();
     }
 
     @Override
-    public TableauDto updateTableau(Long tableauId, TableauDto tableauDto) {
-        var tableau = tableauRepository.findById(tableauId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Le tableau avec l'ID %d n'existe pas", tableauId)));
+    public CommentaireDto updateCommentaire(String commentaireId, CommentaireDto commentaireDto) {
 
-        if (tableauDto.getTabNom() != null) {
-            tableau.setTabNom(tableauDto.getTabNom());
-        }
-        if (tableauDto.getTabDateCreation() != null) {
-            tableau.setTabDateCreation(tableauDto.getTabDateCreation());
-        }
+        Commentaire commentaire = commentaireRepository.findById(commentaireId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Le commentaire avec l'ID %s n'existe pas", commentaireId)
+                ));
 
-        // Si createurId est fourni, on met à jour le créateur
-        if (tableauDto.getCreateurId() != null) {
-            var createur = compteRepository.findById(tableauDto.getCreateurId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            String.format("Le compte avec l'ID %d n'existe pas", tableauDto.getCreateurId())));
-            tableau.setCreateur(createur);
+        if (commentaireDto.getContenu() != null) {
+            commentaire.setContenu(commentaireDto.getContenu());
         }
 
-        // Si comptesIds est fourni, on met à jour les participants
-        if (tableauDto.getComptesIds() != null) {
-            var participants = tableauDto.getComptesIds().stream()
-                    .map(id -> compteRepository.findById(id)
-                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                    String.format("Le compte avec l'ID %d n'existe pas", id))))
-                    .collect(Collectors.toSet());
-            tableau.setParticipants(participants);
+        if (commentaireDto.getDatePublication() != null) {
+            commentaire.setDatePublication(commentaireDto.getDatePublication());
         }
 
-        var savedTableau = tableauRepository.save(tableau);
-        return tableauMapper.toDto(savedTableau);
+        if (commentaireDto.getCptId() != null) {
+            commentaire.setCptId(commentaireDto.getCptId());
+        }
+
+        if (commentaireDto.getTchId() != null) {
+            commentaire.setTchId(commentaireDto.getTchId());
+        }
+
+        Commentaire updatedCommentaire = commentaireRepository.save(commentaire);
+
+        return CommentaireMapper.toDto(updatedCommentaire);
+    }
+
+    public List<CommentaireDto> getCommentairesByTache(Long tchId) {
+
+        return commentaireRepository.findByTchId(tchId)
+                .stream()
+                .map(CommentaireMapper::toDto)
+                .toList();
     }
 
     @Override
-    public TableauDto createTableau(Long cptId, TableauDto tableauDto) {
-        var compte = compteRepository.findById(cptId)
+    public CommentaireDto createCommentaire(Long tchId, CommentaireDto commentaireDto) {
+
+        // 1. Vérifier que la tâche existe (MariaDB)
+        tacheRepository.findById(tchId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Le compte avec l'ID %d n'existe pas", cptId)));
+                        "La tâche avec l'ID " + commentaireDto.getTchId() + " n'existe pas"));
 
-        Tableau tableau = tableauMapper.toEntity(tableauDto);
+        // 2. Vérifier que le compte existe (optionnel mais recommandé)
+        if (commentaireDto.getCptId() != null) {
+            compteRepository.findById(Long.valueOf(commentaireDto.getCptId()))
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Le compte avec l'ID " + commentaireDto.getCptId() + " n'existe pas"));
+        }
 
-        tableau.setCreateur(compte);
-        compte.getTableauxCrees().add(tableau);
+        // 3. Créer le commentaire (MongoDB)
+        Commentaire commentaire = new Commentaire();
+        commentaire.setContenu(commentaireDto.getContenu());
+        commentaire.setDatePublication(commentaireDto.getDatePublication());
+        commentaire.setCptId(commentaireDto.getCptId());
+        commentaire.setTchId(commentaireDto.getTchId());
 
-        Tableau tableauCreated = tableauRepository.save(tableau);
+        Commentaire saved = commentaireRepository.save(commentaire);
 
-        return tableauMapper.toDto(tableauCreated);
+        // 4. Retour DTO
+        return CommentaireMapper.toDto(saved);
     }
 }
