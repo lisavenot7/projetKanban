@@ -29,4 +29,6 @@ public interface TableauService {
     List<CompteUserResponse> getParticipants(Long id);
 
     List<CompteUserResponse> setParticipants(Long id, ParticipantsDto participantsDto);
+
+    CompteUserResponse getCreateur(Long id);
 }

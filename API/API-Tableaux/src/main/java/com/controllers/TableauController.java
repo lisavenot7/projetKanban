@@ -96,7 +96,6 @@ public class TableauController {
     }
 
     @GetMapping("/{id}/participants")
-    @ResponseStatus(HttpStatus.CREATED)
     public DisplayResponseDto<List<CompteUserResponse>> getParticipants(@PathVariable Long id) {
         DisplayResponseDto<List<CompteUserResponse>> displayResponseDto = new DisplayResponseDto<>();
 
@@ -115,6 +114,17 @@ public class TableauController {
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
         displayResponseDto.setData(tableauService.setParticipants(id, participantsDto));
+
+        return displayResponseDto;
+    }
+
+    @GetMapping("/{id}/createur")
+    public DisplayResponseDto<CompteUserResponse> getCreateur(@PathVariable Long id) {
+        DisplayResponseDto<CompteUserResponse> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("item");
+        displayResponseDto.setData(tableauService.getCreateur(id));
 
         return displayResponseDto;
     }
