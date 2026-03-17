@@ -15,7 +15,6 @@ public class TableauDto {
 
     private Long tabId; // pas besoin de @NotNull si utilisé pour la création
 
-    @NotNull
     private String tabNom;
 
     private String tabDateCreation;

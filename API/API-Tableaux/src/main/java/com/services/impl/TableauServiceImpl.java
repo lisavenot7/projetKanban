@@ -5,8 +5,10 @@ import com.dtos.TableauDto;
 import com.entities.Colonne;
 import com.entities.Tableau;
 import com.mappers.TableauMapper;
+import com.repositories.ColonneRepository;
 import com.repositories.CompteRepository;
 import com.repositories.TableauRepository;
+import com.services.ColonneService;
 import com.services.TableauService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("TableauService")
@@ -22,13 +25,18 @@ public class TableauServiceImpl implements TableauService {
 
     private final TableauRepository tableauRepository;
     private final CompteRepository compteRepository;
+    private final ColonneRepository colonneRepository;
+
+    private final ColonneService colonneService;
 
     private final TableauMapper tableauMapper;
 
-    public TableauServiceImpl(TableauRepository tableauRepository, TableauMapper tableauMapper, CompteRepository compteRepository) {
+    public TableauServiceImpl(TableauRepository tableauRepository, TableauMapper tableauMapper, CompteRepository compteRepository, ColonneRepository colonneRepository, ColonneService colonneService) {
         this.tableauRepository = tableauRepository;
         this.tableauMapper = tableauMapper;
         this.compteRepository = compteRepository;
+        this.colonneRepository = colonneRepository;
+        this.colonneService = colonneService;
     }
 
     @Override
@@ -101,6 +109,7 @@ public class TableauServiceImpl implements TableauService {
 
     @Override
     public TableauDto createTableau(Long cptId, TableauDto tableauDto) {
+
         var compte = compteRepository.findById(cptId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Le compte avec l'ID %d n'existe pas", cptId)));
@@ -108,9 +117,33 @@ public class TableauServiceImpl implements TableauService {
         Tableau tableau = tableauMapper.toEntity(tableauDto);
 
         tableau.setCreateur(compte);
-        compte.getTableauxCrees().add(tableau);
 
+        // 🔥 1. Sauvegarder UNE SEULE FOIS
         Tableau tableauCreated = tableauRepository.save(tableau);
+
+        // 🔥 2. Lier au compte
+        compte.getTableauxCrees().add(tableauCreated);
+        compteRepository.save(compte);
+
+        // 🔥 3. Gérer les colonnes APRÈS (id dispo)
+        if (tableauDto.getColonnes() != null) {
+            tableauDto.getColonnes().forEach(colonneDto -> {
+
+                // ⚠️ Vérifier null
+                if (colonneDto.getClnId() != null) {
+
+                    Optional<Colonne> colonneBDD = colonneRepository.findById(colonneDto.getClnId());
+
+                    if (colonneBDD.isPresent()) {
+                        colonneService.updateColonne(colonneDto.getClnId(), colonneDto);
+                        return;
+                    }
+                }
+
+                // création
+                colonneService.createColonne(tableauCreated.getTabId(), colonneDto);
+            });
+        }
 
         return tableauMapper.toDto(tableauCreated);
     }

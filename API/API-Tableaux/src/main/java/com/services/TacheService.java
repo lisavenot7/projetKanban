@@ -42,5 +42,5 @@ public interface TacheService {
      */
     TacheDto updateTache(Long tacheId, TacheDto tacheDto);
 
-    TableauDto createTache(Long colonneId, TacheDto tacheDto);
+    TacheDto createTache(Long colonneId, TacheDto tacheDto);
 }
