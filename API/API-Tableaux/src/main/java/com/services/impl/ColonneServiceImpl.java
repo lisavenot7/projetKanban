@@ -96,25 +96,6 @@ public class ColonneServiceImpl implements ColonneService {
         // 🔥 1. save colonne pour avoir ID
         Colonne colonneSaved = colonneRepository.save(colonne);
 
-        // 🔥 2. gérer les tâches
-        if (colonneDto.getTaches() != null) {
-            colonneDto.getTaches().forEach(tacheDto -> {
-
-                if (tacheDto.getTchId() != null) {
-
-                    Optional<Tache> tacheBDD = tacheRepository.findById(tacheDto.getTchId());
-
-                    if (tacheBDD.isPresent()) {
-                        tacheService.updateTache(tacheDto.getTchId(), tacheDto);
-                        return;
-                    }
-                }
-
-                // ✅ BON ID ici
-                tacheService.createTache(colonneSaved.getClnId(), tacheDto);
-            });
-        }
-
         return colonneMapper.toDto(colonneSaved);
     }
 

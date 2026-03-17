@@ -12,7 +12,11 @@ import java.util.stream.Collectors;
 @Component
 public class CompteUserMapper {
 
-    private final TableauMapper tableauMapper = new TableauMapper();
+    private final TableauMapper tableauMapper;
+
+    public CompteUserMapper(TableauMapper tableauMapper) {
+        this.tableauMapper = tableauMapper;
+    }
 
     public CompteUserResponse toDto(Compte compte) {
         if (compte == null) {
