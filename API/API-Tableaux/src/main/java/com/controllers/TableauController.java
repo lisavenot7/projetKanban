@@ -1,8 +1,6 @@
 package com.controllers;
 
-import com.dtos.ColonneDto;
-import com.dtos.DisplayResponseDto;
-import com.dtos.TableauDto;
+import com.dtos.*;
 import com.services.TableauService;
 import com.services.impl.ColonneServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -93,6 +91,30 @@ public class TableauController {
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
         displayResponseDto.setData(colonneService.createColonne(id, colonneDto));
+
+        return displayResponseDto;
+    }
+
+    @GetMapping("/{id}/participants")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<CompteUserResponse>> getParticipants(@PathVariable Long id) {
+        DisplayResponseDto<List<CompteUserResponse>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("item");
+        displayResponseDto.setData(tableauService.getParticipants(id));
+
+        return displayResponseDto;
+    }
+
+    @PostMapping("/{id}/participants")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<CompteUserResponse>> setParticipants(@PathVariable Long id, @RequestBody ParticipantsDto participantsDto) {
+        DisplayResponseDto<List<CompteUserResponse>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("item");
+        displayResponseDto.setData(tableauService.setParticipants(id, participantsDto));
 
         return displayResponseDto;
     }

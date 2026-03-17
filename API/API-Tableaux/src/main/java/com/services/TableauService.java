@@ -1,6 +1,8 @@
 package com.services;
 
+import com.dtos.CompteUserResponse;
 import com.dtos.TableauDto;
+import com.dtos.ParticipantsDto;
 
 import java.util.List;
 
@@ -23,4 +25,8 @@ public interface TableauService {
     List<TableauDto> getTableauxCreesByCompte(Long id);
 
     List<TableauDto> getTableauxParticipesByCompte(Long id);
+
+    List<CompteUserResponse> getParticipants(Long id);
+
+    List<CompteUserResponse> setParticipants(Long id, ParticipantsDto participantsDto);
 }
