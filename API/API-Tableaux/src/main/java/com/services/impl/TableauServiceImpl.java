@@ -186,25 +186,31 @@ public class TableauServiceImpl implements TableauService {
 
     @Override
     @Transactional
-    public List<CompteUserResponse> setParticipants(Long id, ParticipantsDto participantsDto) {
+    public List<CompteUserResponse> setParticipants(Long id, ParticipantsDto dto) {
 
         var tableau = tableauRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("Le tableau avec l'ID %d n'existe pas", id)));
+                        "Tableau introuvable"));
 
-        // Récupérer tous les comptes en une seule requête
-        List<Compte> participants = compteRepository.findAllById(participantsDto.getIds());
+        List<Compte> nouveauxParticipants =
+                compteRepository.findAllById(dto.getIds());
 
-        // Vérifier que tous les IDs existent
-        if (participants.size() != participantsDto.getIds().size()) {
+        if (nouveauxParticipants.size() != dto.getIds().size()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Un ou plusieurs participants n'existent pas");
         }
 
-        tableau.getParticipants().clear();
-        tableau.getParticipants().addAll(participants);
+        // 🔥 On enlève le tableau de tous les anciens comptes
+        for (Compte compte : compteRepository.findAll()) {
+            compte.getParticipations().remove(tableau);
+        }
+
+        // 🔥 On ajoute le tableau aux nouveaux comptes
+        for (Compte compte : nouveauxParticipants) {
+            compte.getParticipations().add(tableau);
+        }
 
         return this.getParticipants(id);
     }
