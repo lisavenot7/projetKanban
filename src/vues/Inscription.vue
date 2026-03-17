@@ -43,7 +43,6 @@ const valider = async () => {
     prenom:prenom.value,
     nom:nom.value
   }
-
   try {
     const response = await fetch("http://localhost:10056/auth/signup", {
       method: "POST",

@@ -7,10 +7,11 @@ import StatsChart from '../components/StatsUtilisateur.vue'
 
 import usersData from '../bdd/users.json'
 
-import {ref,computed} from 'vue'
-import {useRoute} from "vue-router"
+import {ref,computed,onMounted} from 'vue'
+import {useRoute,useRouter} from "vue-router"
 
 const route = useRoute()
+const router = useRouter()
 
 const pseudoParam = route.params.id
 const user = usersData.find(u => u.pseudo === pseudoParam)
@@ -21,6 +22,17 @@ const nbUtil = computed(() => usersData.filter(user => user.isAdmin === 0).lengt
 const nbAct = computed(() => usersData.filter(user => user.actif === 1).length)
 const nbDes = computed(() => usersData.filter(user => user.actif === 0).length)
 
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "0") {
+    router.push("/private")
+  }
+})
 </script>
 
 <template>

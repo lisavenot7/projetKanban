@@ -2,7 +2,7 @@
 import Navbar from "../components/NavbarAdmin.vue"
 import NavbarUtilisateur from "../components/NavbarUtilisateur.vue"
 import { useRouter ,useRoute} from "vue-router"
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import usersData from '../bdd/users.json'
 
 const router = useRouter()
@@ -32,6 +32,13 @@ const valider = async () => {
     router.push("/admin/profil")
   }
 }
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  if (!token) {
+    router.push("/connexion")
+  }
+})
 </script>
 
 <template>

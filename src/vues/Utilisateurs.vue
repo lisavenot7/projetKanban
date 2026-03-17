@@ -5,26 +5,35 @@ import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
-const users = ref([])
-const filteredUsers = ref([])
 
+const users = ref([])
+
+const filteredUsers = ref([])
 const selectedRole = ref('')
 const search = ref('')
 
 const token = localStorage.getItem("jwtToken")
-if (!token) {
-  router.push("/connexion")
-}
 
-// Récupérer les utilisateurs depuis l'API
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "0") {
+    router.push("/private")
+  }
+})
+
 async function fetchUsers() {
   try {
     const response = await fetch("http://localhost:10056/comptes", {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
     if (!response.ok) {
       console.error("Erreur récupération utilisateurs", response.status)
       return
@@ -37,7 +46,28 @@ async function fetchUsers() {
   }
 }
 
-// Filtrer par rôle
+async function modifEtat(user) {
+  try {
+    const etat = Number(!user.cptIsActive )
+    const response = await fetch(`http://localhost:10056/comptes/${user.cptId}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"cptIsActive": etat}) 
+    });
+    if (!response.ok) {
+      console.error("Erreur lors du changement d'état", response.status);
+      return;
+    }
+    const data = await response.json();
+    user.cptIsActive = data.data.cptIsActive;
+  } catch (err) {
+    console.error("Impossible de changer l'état", err);
+  }
+}
+
 function filterByRole() {
   if (!selectedRole.value) {
     filteredUsers.value = users.value
@@ -48,19 +78,18 @@ function filterByRole() {
   )
 }
 
-// Rechercher un utilisateur
 function searchUser() {
   if (!search.value) {
     filteredUsers.value = users.value
     return
   }
   filteredUsers.value = users.value.filter(user =>
-    user.cptPseudo.toLowerCase().includes(search.value.toLowerCase())
-    // ajouter user.nom / user.prenom si dispo
+    user.cptMail.toLowerCase().includes(search.value.toLowerCase()) ||
+    user.nom.toLowerCase().includes(search.value.toLowerCase()) ||
+    user.prenom.toLowerCase().includes(search.value.toLowerCase())
   )
 }
 
-// Navigation
 function goToModifier(user) {
   router.push(`/admin/utilisateurs/${user.cptPseudo}/modifier`)
 }
@@ -70,20 +99,21 @@ function goToAjouter() {
 function goToStat(user) {
   router.push(`/admin/utilisateurs/${user.cptPseudo}/statistiques`)
 }
+function changeEtat(user) {
+  modifEtat(user)
+}
 
-// Au montage du composant
 onMounted(() => {
   fetchUsers()
 })
+
 </script>
 
 <template>
   <Navbar />
   <div class="home">
-    <br/><br/><br/>
 
-    <!-- Bandeau recherche / filtre (commenté pour l'instant) -->
-    <!--
+    <br/><br/><br/>
     <div class="bandeau">
       <div class="bandeau-item">
         <input id="search" v-model="search" @keyup.enter="searchUser" placeholder="Rechercher un utilisateur" />
@@ -104,7 +134,6 @@ onMounted(() => {
         </select>
       </div>
     </div>
-    -->
 
     <div>
       <button class="ajout" @click="goToAjouter">Ajouter</button>
@@ -113,7 +142,6 @@ onMounted(() => {
           <caption>Utilisateurs inscrits sur l'application</caption>
           <thead>
             <tr>
-              <th>Pseudo</th>
               <th>Nom</th>
               <th>Prénom</th>
               <th>Mail</th>
@@ -126,9 +154,8 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="user in filteredUsers" :key="user.cptId">
-              <td>{{ user.cptPseudo }}</td>
-              <td>{{ user.cptPseudo }}</td> <!-- remplacer par nom si tu ajoutes ce champ -->
-              <td>{{ user.cptPseudo }}</td> <!-- remplacer par prénom si tu ajoutes ce champ -->
+              <td>{{ user.nom }}</td> 
+              <td>{{ user.prenom }}</td> 
               <td>{{ user.cptMail }}</td>
               <td v-if="user.cptIsAdmin === 1">Administrateur</td>
               <td v-else>Utilisateur</td>
@@ -162,12 +189,19 @@ onMounted(() => {
                 </button>
               </td>
 
-              <!-- État actif désactivé pour l'instant -->
-              <td>
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="28" viewBox="0 0 50 28" fill="none">
-                  <rect x="1" y="1" width="48" height="26" rx="13" fill="#4CAF50" stroke="#0F171E" stroke-width="2"/>
-                  <circle cx="37" cy="14" r="11" fill="white"/>
-                </svg>
+              <td @click="changeEtat(user)" style="cursor: pointer;">
+                <span v-if="user.cptIsActive === 1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="28" viewBox="0 0 50 28" fill="none">
+                    <rect x="1" y="1" width="48" height="26" rx="13" fill="#4CAF50" stroke="#0F171E" stroke-width="2"/>
+                    <circle cx="37" cy="14" r="11" fill="white"/>
+                  </svg>
+                </span>
+                <span v-else>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="28" viewBox="0 0 50 28" fill="none">
+                    <rect x="1" y="1" width="48" height="26" rx="13" fill="#F44336" stroke="#0F171E" stroke-width="2"/>
+                    <circle cx="13" cy="14" r="11" fill="white"/>
+                  </svg>
+                </span>
               </td>
             </tr>
           </tbody>
