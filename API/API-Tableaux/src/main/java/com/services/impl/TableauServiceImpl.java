@@ -3,6 +3,7 @@ package com.services.impl;
 import com.dtos.CompteUserResponse;
 import com.dtos.ParticipantsDto;
 import com.dtos.TableauDto;
+import com.entities.Compte;
 import com.entities.Tableau;
 import com.mappers.CompteUserMapper;
 import com.mappers.TableauMapper;
@@ -184,15 +185,26 @@ public class TableauServiceImpl implements TableauService {
     }
 
     @Override
+    @Transactional
     public List<CompteUserResponse> setParticipants(Long id, ParticipantsDto participantsDto) {
+
         var tableau = tableauRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
                         String.format("Le tableau avec l'ID %d n'existe pas", id)));
 
-        tableau.getParticipants().clear();
+        // Récupérer tous les comptes en une seule requête
+        List<Compte> participants = compteRepository.findAllById(participantsDto.getIds());
 
-        participantsDto.getIds().forEach(idc -> tableau.getParticipants().add(compteRepository.findById(idc).get()));
-        tableauRepository.save(tableau);
+        // Vérifier que tous les IDs existent
+        if (participants.size() != participantsDto.getIds().size()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Un ou plusieurs participants n'existent pas");
+        }
+
+        tableau.getParticipants().clear();
+        tableau.getParticipants().addAll(participants);
 
         return this.getParticipants(id);
     }
