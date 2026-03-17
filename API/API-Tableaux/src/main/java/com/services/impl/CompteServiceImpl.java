@@ -58,6 +58,7 @@ public class CompteServiceImpl implements CompteService {
         compte.setCptMail(createCompteUserDto.email());
         compte.setCptMdp(passwordEncoder.encode(createCompteUserDto.email()));
         compte.setCptIsAdmin(createCompteUserDto.isAdmin().intValue());
+        compte.setCptIsActive(1);
 
         User user = new User();
         user.setNom(createCompteUserDto.nom());
