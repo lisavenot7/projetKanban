@@ -2,6 +2,7 @@ package com.services;
 
 import com.dtos.CompteDto;
 import com.dtos.CompteUserResponse;
+import com.dtos.CreateCompteUserDto;
 import com.dtos.ModifCompteDto;
 import com.entities.Compte;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public interface CompteService {
 
     Compte saveCompte(CompteDto CompteDto);
+
+    CompteUserResponse createCompte(CreateCompteUserDto createCompteUserDto);
 
     CompteUserResponse getCompteById(Long CompteId);
 
