@@ -196,4 +196,12 @@ public class TableauServiceImpl implements TableauService {
 
         return this.getParticipants(id);
     }
+
+    @Override
+    public CompteUserResponse getCreateur(Long id) {
+        var tableau = tableauRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le tableau avec l'ID %d n'existe pas", id)));
+        return compteUserMapper.toDto(tableau.getCreateur());
+    }
 }
