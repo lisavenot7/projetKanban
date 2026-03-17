@@ -3,9 +3,9 @@ package com.services.impl;
 
 import com.dtos.CompteDto;
 import com.dtos.CompteUserResponse;
+import com.dtos.CreateCompteUserDto;
 import com.dtos.ModifCompteDto;
 import com.entities.Compte;
-import com.entities.Tableau;
 import com.entities.User;
 import com.mappers.CompteMapper;
 import com.mappers.CompteUserMapper;
@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service("CompteService")
 @Transactional
@@ -52,6 +50,24 @@ public class CompteServiceImpl implements CompteService {
     public Compte saveCompte(CompteDto compteDto) {
         Compte compte = compteMapper.toEntity(compteDto);
         return compteRepository.save(compte);
+    }
+
+    @Override
+    public CompteUserResponse createCompte(CreateCompteUserDto createCompteUserDto) {
+        Compte compte = new Compte();
+        compte.setCptMail(createCompteUserDto.email());
+        compte.setCptMdp(passwordEncoder.encode(createCompteUserDto.email()));
+        compte.setCptIsAdmin(createCompteUserDto.isAdmin());
+
+        User user = new User();
+        user.setNom(createCompteUserDto.nom());
+        user.setPrenom(createCompteUserDto.prenom());
+        userRepository.save(user);
+
+        compte.setUser(user);
+        compteRepository.save(compte);
+
+        return compteUserMapper.toDto(compte);
     }
 
     @Override

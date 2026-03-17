@@ -56,11 +56,11 @@ public class CompteController {
     // CREATE
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DisplayResponseDto<Compte> saveCompte(@RequestBody CompteDto compteDto) {
-        DisplayResponseDto<Compte> displayResponseDto = new DisplayResponseDto<>();
+    public DisplayResponseDto<CompteUserResponse> saveCompte(@RequestBody CreateCompteUserDto createCompteUserDto) {
+        DisplayResponseDto<CompteUserResponse> displayResponseDto = new DisplayResponseDto<>();
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("item");
-        displayResponseDto.setData(compteService.saveCompte(compteDto));
+        displayResponseDto.setData(compteService.createCompte(createCompteUserDto));
         return displayResponseDto;
     }
 
