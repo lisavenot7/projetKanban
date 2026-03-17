@@ -106,7 +106,7 @@ public class TableauController {
         return displayResponseDto;
     }
 
-    @PostMapping("/{id}/participants")
+    @PatchMapping("/{id}/participants")
     @ResponseStatus(HttpStatus.CREATED)
     public DisplayResponseDto<List<CompteUserResponse>> setParticipants(@PathVariable Long id, @RequestBody ParticipantsDto participantsDto) {
         DisplayResponseDto<List<CompteUserResponse>> displayResponseDto = new DisplayResponseDto<>();
