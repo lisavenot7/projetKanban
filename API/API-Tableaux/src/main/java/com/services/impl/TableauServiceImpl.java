@@ -1,9 +1,10 @@
 package com.services.impl;
 
-import com.dtos.ColonneDto;
+import com.dtos.CompteUserResponse;
+import com.dtos.ParticipantsDto;
 import com.dtos.TableauDto;
-import com.entities.Colonne;
 import com.entities.Tableau;
+import com.mappers.CompteUserMapper;
 import com.mappers.TableauMapper;
 import com.repositories.ColonneRepository;
 import com.repositories.CompteRepository;
@@ -17,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("TableauService")
@@ -31,13 +31,15 @@ public class TableauServiceImpl implements TableauService {
     private final ColonneService colonneService;
 
     private final TableauMapper tableauMapper;
+    private final CompteUserMapper compteUserMapper;
 
-    public TableauServiceImpl(TableauRepository tableauRepository, TableauMapper tableauMapper, CompteRepository compteRepository, ColonneRepository colonneRepository, ColonneService colonneService) {
+    public TableauServiceImpl(TableauRepository tableauRepository, TableauMapper tableauMapper, CompteRepository compteRepository, ColonneRepository colonneRepository, ColonneService colonneService, CompteUserMapper compteUserMapper) {
         this.tableauRepository = tableauRepository;
         this.tableauMapper = tableauMapper;
         this.compteRepository = compteRepository;
         this.colonneRepository = colonneRepository;
         this.colonneService = colonneService;
+        this.compteUserMapper = compteUserMapper;
     }
 
     @Override
@@ -167,5 +169,31 @@ public class TableauServiceImpl implements TableauService {
 
         compte.getParticipations().forEach(tableau ->  {listTab.add(tableauMapper.toDto(tableau));});
         return listTab;
+    }
+
+    @Override
+    public List<CompteUserResponse> getParticipants(Long id) {
+        var tableau = tableauRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le tableau avec l'ID %d n'existe pas", id)));
+
+        List<CompteUserResponse> listCompte = new ArrayList<>();
+
+        tableau.getParticipants().forEach(compte -> listCompte.add(compteUserMapper.toDto(compte)));
+        return listCompte;
+    }
+
+    @Override
+    public List<CompteUserResponse> setParticipants(Long id, ParticipantsDto participantsDto) {
+        var tableau = tableauRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le tableau avec l'ID %d n'existe pas", id)));
+
+        tableau.getParticipants().clear();
+
+        participantsDto.getIds().forEach(idc -> tableau.getParticipants().add(compteRepository.findById(idc).get()));
+        tableauRepository.save(tableau);
+
+        return this.getParticipants(id);
     }
 }
