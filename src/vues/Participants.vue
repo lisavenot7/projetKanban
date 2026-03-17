@@ -1,25 +1,77 @@
 <style src="../assets/css/style.css"></style>
 <script setup>
 import Navbar from "../components/NavbarUtilisateur.vue"
+
 import { useRouter, useRoute } from "vue-router"
-import tabsData from '../bdd/tableaux.json'
-import usersData from '../bdd/users.json'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
 
-const idParam = Number(route.params.id)  
+const idTab = Number(route.params.id)  
 
-const tableau = tabsData.find(t => t.id === idParam) || { participants: [] }
-
-const participants = tableau.participants.map(pseudo => {
-  return usersData.find(u => u.pseudo === pseudo) || { pseudo: "Inconnu", nom: "", prenom: "" }
-})
+const participants = ref([])
+const createur = ref('')
 
 function goToGestion() {
-  router.push(`/private/tableaux/${tableau.id}/participants/gestion`)
+  router.push(`/private/tableaux/${idTab}/participants/gestion`)
 }
 
+
+async function fetchParticipants(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/participants`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
+      return
+    }
+    const data = await response.json()
+    participants.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer le tableau", err)
+  }
+}
+
+async function fetchCreateur(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/createur`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
+      return
+    }
+    const data = await response.json()
+    createur.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer le tableau", err)
+  }
+}
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchParticipants(idTab)
+  fetchCreateur(idTab)
+})
 </script>
 
 <template>
@@ -32,10 +84,14 @@ function goToGestion() {
       </div>
       <div 
         class="tache-cards" 
+      ><h3> {{ createur.prenom }} {{ createur.nom }}</h3>
+      </div>
+      <div 
+        class="tache-cards" 
         v-for="par in participants"
-        :key="par.pseudo"   
+        :key="par.cptMail"   
       >
-        <h3>{{ par.pseudo }} - {{ par.prenom }} {{ par.nom }}</h3>
+        <h3> {{ par.prenom }} {{ par.nom }}</h3>
       </div>
     </div>
   </div>

@@ -2,42 +2,139 @@
 <script setup>
   import Navbar from "../components/NavbarUtilisateur.vue"
   import { useRouter, useRoute } from "vue-router"
-  import { computed, ref } from "vue"
-
-  import tabsData from "../bdd/tableaux.json"
-  import usersData from "../bdd/users.json"
+  import { computed, ref , onMounted} from "vue"
 
   const router = useRouter()
   const route = useRoute()
 
-  const idParam = Number(route.params.id)
+  const idTab = Number(route.params.id)
 
-  const tab = tabsData.find(t => t.id === idParam) || { participants: [] }
+  const users = ref([])
 
   const search = ref("")
 
-  const selectedUsers = ref(
-    usersData.filter(u => tab.participants.includes(u.pseudo))
-  )
+  const selectedUsers = ref([])
+
+  const createur = ref('')
+
+  const error = ref('')
 
   const filteredUsers = computed(() => {
     const query = search.value.toLowerCase()
-
-    return usersData.filter(user =>
-      `${user.prenom} ${user.nom} ${user.pseudo}`
+    return users.value.filter(user => {
+      if (createur.value && user.cptId === createur.value.cptId) {
+        return false
+      }
+      return `${user.prenom} ${user.nom}`
         .toLowerCase()
         .includes(query)
-    )
+    })
   })
 
+  async function fetchParticipants(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/participants`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
+      return
+    }
+    const data = await response.json()
+    selectedUsers.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer le tableau", err)
+  }
+}
+
+async function fetchCreateur(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/createur`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
+      return
+    }
+    const data = await response.json()
+    createur.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer le tableau", err)
+  }
+}
+
+async function fetchUsers() {
+  try {
+    const response = await fetch("http://localhost:10056/comptes", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération utilisateurs", response.status)
+      return
+    }
+    const data = await response.json()
+    users.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer les utilisateurs", err)
+  }
+}
+
   const annuler = () => {
-    router.push(`/private/tableaux/${tab.id}`)
+    router.push(`/private/tableaux/${idTab}`)
   }
 
-  const valider = () => {
-    tab.participants = selectedUsers.value.map(u => u.pseudo)
-    router.push(`/private/tableaux/${tab.id}`)
+  async function valider() {
+    console.log(selectedUsers.value.map(u => u.cptId))
+    try {
+      const response = await fetch(`http://localhost:10056/tableaux/${idTab}/participants`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ids: selectedUsers.value.map(u => u.cptId)
+        })
+        
+      })
+      if (!response.ok) {
+        console.error("Erreur modification liste participants", response.status)
+        return
+      }
+      router.push(`/private/tableaux/${idTab}`) 
+    } catch (err) {
+      console.error("Impossible de récupérer la liste des paticipants", err)
+    }
   }
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchParticipants(idTab)
+  fetchCreateur(idTab)
+  fetchUsers()
+})
 </script>
 
 <template>
@@ -59,7 +156,7 @@
               :key="user.id"
               :value="user"
             >
-              {{ user.prenom }} {{ user.nom }} ({{ user.pseudo }})
+              {{ user.prenom }} {{ user.nom }} 
             </option>
           </select>
           <div class="selected-list">

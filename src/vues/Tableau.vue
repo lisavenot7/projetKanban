@@ -58,15 +58,15 @@ function goToModifier() {
 }
 
 function goToParticipants() {
-  router.push(`/private/tableaux/${tableau.id}/participants`)
+  router.push(`/private/tableaux/${idTab}/participants`)
 }
 
 function goToParticipantsGestion() {
-  router.push(`/private/tableaux/${tableau.id}/participants/gestion`)
+  router.push(`/private/tableaux/${idTab}/participants/gestion`)
 }
 
 function goToColonneAdd() {
-  router.push(`/private/tableaux/${tableau.id}/colonnes/ajouter`)
+  router.push(`/private/tableaux/${idTab}/colonnes/ajouter`)
 }
 
 async function fetchTab(idTab) {
