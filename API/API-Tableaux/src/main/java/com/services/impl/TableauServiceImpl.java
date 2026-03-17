@@ -125,26 +125,6 @@ public class TableauServiceImpl implements TableauService {
         compte.getTableauxCrees().add(tableauCreated);
         compteRepository.save(compte);
 
-        // 🔥 3. Gérer les colonnes APRÈS (id dispo)
-        if (tableauDto.getColonnes() != null) {
-            tableauDto.getColonnes().forEach(colonneDto -> {
-
-                // ⚠️ Vérifier null
-                if (colonneDto.getClnId() != null) {
-
-                    Optional<Colonne> colonneBDD = colonneRepository.findById(colonneDto.getClnId());
-
-                    if (colonneBDD.isPresent()) {
-                        colonneService.updateColonne(colonneDto.getClnId(), colonneDto);
-                        return;
-                    }
-                }
-
-                // création
-                colonneService.createColonne(tableauCreated.getTabId(), colonneDto);
-            });
-        }
-
         return tableauMapper.toDto(tableauCreated);
     }
 }

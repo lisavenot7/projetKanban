@@ -1,10 +1,12 @@
 package com.mappers;
 
 import com.dtos.ColonneDto;
+import com.dtos.CompteUserResponse;
 import com.dtos.TableauDto;
 import com.entities.Colonne;
 import com.entities.Compte;
 import com.entities.Tableau;
+import com.repositories.CompteRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.stream.Collectors;
 public class TableauMapper {
 
     private final ColonneMapper colonneMapper = new ColonneMapper();
+    private final CompteRepository compteRepository;
+
+    public TableauMapper(CompteRepository compteRepository) {
+        this.compteRepository = compteRepository;
+    }
 
     // Entity -> DTO
     public TableauDto toDto(Tableau tableau) {
@@ -48,6 +55,11 @@ public class TableauMapper {
         tableau.setTabId(dto.getTabId());
         tableau.setTabNom(dto.getTabNom());
         tableau.setTabDateCreation(dto.getTabDateCreation());
+
+        if (compteRepository.findById(dto.getCreateurId()).isPresent()) {
+            Compte compte = compteRepository.findById(dto.getCreateurId()).get();
+            tableau.setCreateur(compte);
+        }
 
         if (dto.getColonnes() != null) {
             List<Colonne> cols = dto.getColonnes().stream()
