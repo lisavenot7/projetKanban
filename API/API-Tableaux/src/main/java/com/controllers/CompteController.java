@@ -94,4 +94,40 @@ public class CompteController {
 
         return displayResponseDto;
     }
+
+    @GetMapping("/{id}/tableaux")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<TableauDto>> getCompteTableaux(@PathVariable Long id) {
+        DisplayResponseDto<List<TableauDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(tableauService.getTableauxByCompte(id));
+
+        return displayResponseDto;
+    }
+
+    @GetMapping("/{id}/tableaux/crees")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<TableauDto>> getCompteTableauxCrees(@PathVariable Long id) {
+        DisplayResponseDto<List<TableauDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(tableauService.getTableauxCreesByCompte(id));
+
+        return displayResponseDto;
+    }
+
+    @GetMapping("/{id}/tableaux/participes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<TableauDto>> getCompteTableauxParticipes(@PathVariable Long id) {
+        DisplayResponseDto<List<TableauDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(tableauService.getTableauxParticipesByCompte(id));
+
+        return displayResponseDto;
+    }
 }

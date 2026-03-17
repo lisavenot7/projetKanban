@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,5 +127,45 @@ public class TableauServiceImpl implements TableauService {
         compteRepository.save(compte);
 
         return tableauMapper.toDto(tableauCreated);
+    }
+
+    @Override
+    public List<TableauDto> getTableauxByCompte(Long id) {
+
+        var compte = compteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le compte avec l'ID %d n'existe pas", id)));
+
+        List<TableauDto> listTab = new ArrayList<>();
+
+        compte.getTableauxCrees().forEach(tableau -> {listTab.add(tableauMapper.toDto(tableau));});
+        compte.getParticipations().forEach(tableau ->  {listTab.add(tableauMapper.toDto(tableau));});
+        return listTab;
+    }
+
+    @Override
+    public List<TableauDto> getTableauxCreesByCompte(Long id) {
+
+        var compte = compteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le compte avec l'ID %d n'existe pas", id)));
+
+        List<TableauDto> listTab = new ArrayList<>();
+
+        compte.getTableauxCrees().forEach(tableau -> {listTab.add(tableauMapper.toDto(tableau));});
+        return listTab;
+    }
+
+    @Override
+    public List<TableauDto> getTableauxParticipesByCompte(Long id) {
+
+        var compte = compteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Le compte avec l'ID %d n'existe pas", id)));
+
+        List<TableauDto> listTab = new ArrayList<>();
+
+        compte.getParticipations().forEach(tableau ->  {listTab.add(tableauMapper.toDto(tableau));});
+        return listTab;
     }
 }
