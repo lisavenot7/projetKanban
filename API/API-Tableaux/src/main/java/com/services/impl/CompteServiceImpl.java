@@ -15,6 +15,7 @@ import com.repositories.UserRepository;
 import com.services.CompteService;
 import com.services.TableauService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,13 +36,16 @@ public class CompteServiceImpl implements CompteService {
     private final TableauService tableauService;
     private final CompteUserMapper compteUserMapper;
 
-    public CompteServiceImpl(CompteRepository compteRepository, UserRepository userRepository, TableauRepository tableauRepository, CompteMapper compteMapper, TableauService tableauService, CompteUserMapper compteUserMapper) {
+    private final PasswordEncoder passwordEncoder;
+
+    public CompteServiceImpl(CompteRepository compteRepository, UserRepository userRepository, TableauRepository tableauRepository, CompteMapper compteMapper, TableauService tableauService, CompteUserMapper compteUserMapper, PasswordEncoder passwordEncoder) {
         this.compteRepository = compteRepository;
         this.userRepository = userRepository;
         this.tableauRepository = tableauRepository;
         this.compteMapper = compteMapper;
         this.tableauService = tableauService;
         this.compteUserMapper = compteUserMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -85,47 +89,37 @@ public class CompteServiceImpl implements CompteService {
     }
 
     @Override
-    public CompteUserResponse updateCompte(Long compteId, ModifCompteDto modifcompteDto) {
+    @Transactional
+    public CompteUserResponse updateCompte(Long compteId, ModifCompteDto dto) {
+
         Compte compte = compteRepository.findById(compteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Le compte avec l'ID %d n'existe pas", compteId)));
+                        "Compte introuvable"));
 
-        // Mise à jour des champs simples
-        if (modifcompteDto.getCptMail() != null) {
-            compte.setCptMail(modifcompteDto.getCptMail());
+        if (dto.getCptMail() != null) {
+            compte.setCptMail(dto.getCptMail());
         }
 
-        if (modifcompteDto.getCptMdp() != null) {
-            compte.setCptMdp(modifcompteDto.getCptMdp());
+        if (dto.getCptMdp() != null) {
+            compte.setCptMdp(passwordEncoder.encode(dto.getCptMdp()));
         }
 
-        if (modifcompteDto.getCptIsAdmin() != null) {
-            compte.setCptIsAdmin(modifcompteDto.getCptIsAdmin());
+        if (dto.getCptIsAdmin() != null) {
+            compte.setCptIsAdmin(dto.getCptIsAdmin());
         }
 
-        if (modifcompteDto.getCptIsActive() != null) {
-            compte.setCptIsActive(modifcompteDto.getCptIsActive());
+        if (dto.getCptIsActive() != null) {
+            compte.setCptIsActive(dto.getCptIsActive());
         }
 
-        if (modifcompteDto.getNom() != null) {
-            compte.getUser().setNom(modifcompteDto.getNom());
-        }
+        if (compte.getUser() != null) {
+            if (dto.getNom() != null) {
+                compte.getUser().setNom(dto.getNom());
+            }
 
-        if (modifcompteDto.getPrenom() != null) {
-            compte.getUser().setPrenom(modifcompteDto.getPrenom());
-        }
-        userRepository.save(compte.getUser());
-
-        // Gestion des tableaux créés par ce compte
-        if (modifcompteDto.getTableauxCrees() != null) {
-            modifcompteDto.getTableauxCrees().forEach(tableauDto -> {
-                Optional<Tableau> tableauBDD = tableauRepository.findById(tableauDto.getTabId());
-                if (tableauBDD.isPresent()) {
-                    tableauService.updateTableau(tableauDto.getTabId(), tableauDto);
-                } else {
-                    tableauService.createTableau(compteId,tableauDto);
-                }
-            });
+            if (dto.getPrenom() != null) {
+                compte.getUser().setPrenom(dto.getPrenom());
+            }
         }
 
         return compteUserMapper.toDto(compteRepository.save(compte));
