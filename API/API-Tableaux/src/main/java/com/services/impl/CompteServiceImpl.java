@@ -99,9 +99,13 @@ public class CompteServiceImpl implements CompteService {
             compte.setCptMdp(modifcompteDto.getCptMdp());
         }
 
-        compte.setCptIsAdmin(modifcompteDto.getCptIsAdmin());
+        if (modifcompteDto.getCptIsAdmin() != null) {
+            compte.setCptIsAdmin(modifcompteDto.getCptIsAdmin());
+        }
 
-        compte.setCptIsActive(modifcompteDto.getCptIsActive());
+        if (modifcompteDto.getCptIsActive() != null) {
+            compte.setCptIsActive(modifcompteDto.getCptIsActive());
+        }
 
         if (modifcompteDto.getNom() != null) {
             compte.getUser().setNom(modifcompteDto.getNom());
