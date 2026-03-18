@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CommentaireRepository extends MongoRepository<Commentaire, String> {
     List<Commentaire> findByTchId(Long tchId);
+    List<Commentaire> findByCptId(Long compteId);
 }

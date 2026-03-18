@@ -45,4 +45,6 @@ public interface CommentaireService {
     List<CommentaireDto> getCommentairesByTache(Long tchId);
 
     CommentaireDto createCommentaire(Long tchId, CommentaireDto commentaireDto);
+
+    List<CommentaireDto> getCommentaireByCompte(Long id);
 }
