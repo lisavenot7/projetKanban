@@ -20,7 +20,7 @@ public class Tache {
     private String tchDescription;
     private String tchDateLimite;
     private int tchPriorite;
-    private int tchStatus;
+    private String tchStatus;
 
     @ManyToOne
     @JoinColumn(name = "cptId") // clé étrangère vers le compte
