@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,16 +98,6 @@ public class TableauServiceImpl implements TableauService {
             tableau.setCreateur(createur);
         }
 
-        // Si comptesIds est fourni, on met à jour les participants
-        if (tableauDto.getComptesIds() != null) {
-            var participants = tableauDto.getComptesIds().stream()
-                    .map(id -> compteRepository.findById(id)
-                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                    String.format("Le compte avec l'ID %d n'existe pas", id))))
-                    .collect(Collectors.toSet());
-            tableau.setParticipants(participants);
-        }
-
         var savedTableau = tableauRepository.save(tableau);
         return tableauMapper.toDto(savedTableau);
     }
@@ -173,15 +164,16 @@ public class TableauServiceImpl implements TableauService {
     }
 
     @Override
+    @Transactional
     public List<CompteUserResponse> getParticipants(Long id) {
         var tableau = tableauRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Le tableau avec l'ID %d n'existe pas", id)));
 
-        List<CompteUserResponse> listCompte = new ArrayList<>();
-
-        tableau.getParticipants().forEach(compte -> listCompte.add(compteUserMapper.toDto(compte)));
-        return listCompte;
+        return tableau.getParticipants()
+                .stream()
+                .map(compteUserMapper::toDto)
+                .toList();
     }
 
     @Override
@@ -193,8 +185,13 @@ public class TableauServiceImpl implements TableauService {
                         HttpStatus.NOT_FOUND,
                         "Tableau introuvable"));
 
-        List<Compte> nouveauxParticipants =
-                compteRepository.findAllById(dto.getIds());
+        // 🔥 Charger les comptes actuels liés à CE tableau
+        var anciensParticipants = new HashSet<>(tableau.getParticipants());
+
+        // 🔥 Charger les nouveaux
+        var nouveauxParticipants = new HashSet<>(
+                compteRepository.findAllById(dto.getIds())
+        );
 
         if (nouveauxParticipants.size() != dto.getIds().size()) {
             throw new ResponseStatusException(
@@ -202,17 +199,24 @@ public class TableauServiceImpl implements TableauService {
                     "Un ou plusieurs participants n'existent pas");
         }
 
-        // 🔥 On enlève le tableau de tous les anciens comptes
-        for (Compte compte : compteRepository.findAll()) {
+        // 🔥 SUPPRESSION propre
+        for (Compte compte : anciensParticipants) {
             compte.getParticipations().remove(tableau);
         }
 
-        // 🔥 On ajoute le tableau aux nouveaux comptes
+        // 🔥 AJOUT propre
         for (Compte compte : nouveauxParticipants) {
             compte.getParticipations().add(tableau);
         }
 
-        return this.getParticipants(id);
+        // 🔥 Synchroniser côté inverse (important en mémoire)
+        tableau.getParticipants().clear();
+        tableau.getParticipants().addAll(nouveauxParticipants);
+
+        return tableau.getParticipants()
+                .stream()
+                .map(compteUserMapper::toDto)
+                .toList();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.entities.Tableau;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,10 +38,13 @@ public class CompteUserMapper {
                     .map(tableauMapper::toDto)
                     .collect(Collectors.toList());
             dto.setTableauxCrees(tableauDtos);
+        }
 
-            dto.setTableauIds(compte.getTableauxCrees().stream()
+        if (compte.getParticipations() != null) {
+            Set<Long> tableauDtos = compte.getParticipations().stream()
                     .map(Tableau::getTabId)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toSet());
+            dto.setTableauIds(tableauDtos);
         }
 
         return dto;
