@@ -14,7 +14,7 @@ public class CommentaireDto {
 
     private String datePublication;
 
-    private String cptId;
+    private Integer cptId;
 
-    private String tchId;
+    private Integer tchId;
 }

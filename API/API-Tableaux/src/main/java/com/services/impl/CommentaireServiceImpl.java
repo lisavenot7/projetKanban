@@ -129,7 +129,7 @@ public class CommentaireServiceImpl implements CommentaireService {
         commentaire.setContenu(commentaireDto.getContenu());
         commentaire.setDatePublication(commentaireDto.getDatePublication());
         commentaire.setCptId(commentaireDto.getCptId());
-        commentaire.setTchId(commentaireDto.getTchId());
+        commentaire.setTchId(tchId.intValue());
 
         Commentaire saved = commentaireRepository.save(commentaire);
 
