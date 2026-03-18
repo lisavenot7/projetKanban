@@ -52,7 +52,10 @@ public class Compte implements UserDetails {
     private List<Tableau> tableauxCrees;
 
     @OneToMany(mappedBy = "compteAttribue", cascade = CascadeType.ALL)
-    private List<Tache> taches; // les tâches attribuées à ce compte
+    private List<Tache> taches;
+
+    @OneToMany(mappedBy = "auteur", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Action> actions;
 
 
     @Override
