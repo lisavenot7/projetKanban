@@ -22,6 +22,7 @@ public class TacheMapper {
         tache.setTchDescription(dto.getTchDescription());
         tache.setTchDateLimite(dto.getTchDateLimite());
         tache.setTchPriorite(dto.getTchPriorite());
+        tache.setTchStatus(dto.getTchStatus());
         // Compte et Colonne seront assignés dans le service
         return tache;
     }
@@ -40,6 +41,7 @@ public class TacheMapper {
         dto.setTchDescription(entity.getTchDescription());
         dto.setTchDateLimite(entity.getTchDateLimite());
         dto.setTchPriorite(entity.getTchPriorite());
+        dto.setTchStatus(entity.getTchStatus());
 
         if (entity.getCompteAttribue() != null) {
             dto.setCompteId(entity.getCompteAttribue().getCptId());
