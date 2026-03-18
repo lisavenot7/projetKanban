@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "taches")
 @Data
@@ -29,4 +31,7 @@ public class Tache {
     @ManyToOne
     @JoinColumn(name = "clnId") // clé étrangère vers la colonne
     private Colonne colonne;
+
+    @OneToMany(mappedBy = "tacheModifiee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Action> actions;
 }
