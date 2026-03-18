@@ -3,6 +3,7 @@ package com.controllers;
 import com.dtos.*;
 import com.entities.Compte;
 import com.mappers.CompteUserMapper;
+import com.services.CommentaireService;
 import com.services.CompteService;
 import com.services.TableauService;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,13 @@ public class CompteController {
     private final CompteService compteService;
     private final TableauService tableauService;
     private final CompteUserMapper compteUserMapper;
+    private final CommentaireService commentaireService;
 
-    public CompteController(CompteService compteService, TableauService tableauService, CompteUserMapper compteUserMapper) {
+    public CompteController(CompteService compteService, TableauService tableauService, CompteUserMapper compteUserMapper, CommentaireService commentaireService) {
         this.compteService = compteService;
         this.tableauService = tableauService;
         this.compteUserMapper = compteUserMapper;
+        this.commentaireService = commentaireService;
     }
 
     // ENDPOINT POUR LE COMPTE COURANT
@@ -127,6 +130,18 @@ public class CompteController {
         displayResponseDto.setMessage("success");
         displayResponseDto.setType("collection");
         displayResponseDto.setData(tableauService.getTableauxParticipesByCompte(id));
+
+        return displayResponseDto;
+    }
+
+    @GetMapping("/{id}/commentaires")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DisplayResponseDto<List<CommentaireDto>> getCompteCommentaires(@PathVariable Long id) {
+        DisplayResponseDto<List<CommentaireDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(commentaireService.getCommentaireByCompte(id));
 
         return displayResponseDto;
     }

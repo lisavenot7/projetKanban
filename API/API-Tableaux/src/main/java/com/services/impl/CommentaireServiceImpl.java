@@ -136,4 +136,12 @@ public class CommentaireServiceImpl implements CommentaireService {
         // 4. Retour DTO
         return CommentaireMapper.toDto(saved);
     }
+
+    @Override
+    public List<CommentaireDto> getCommentaireByCompte(Long id) {
+        return commentaireRepository.findByCptId(id)
+                .stream()
+                .map(CommentaireMapper::toDto)
+                .toList();
+    }
 }
