@@ -67,8 +67,14 @@ public class TacheController {
     }
 
     @GetMapping("/{tchId}/commentaires")
-    public List<CommentaireDto> getCommentairesByTache(@PathVariable Long tchId) {
-        return commentaireService.getCommentairesByTache(tchId);
+    public DisplayResponseDto<List<CommentaireDto>> getCommentairesByTache(@PathVariable Long tchId) {
+        DisplayResponseDto<List<CommentaireDto>> response = new DisplayResponseDto<>();
+        response.setMessage("success");
+        response.setType("item");
+        response.setData(commentaireService.getCommentairesByTache(tchId));
+
+        return response;
+
     }
 
     @PostMapping("/{id}/commentaires")
