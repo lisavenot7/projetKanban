@@ -1,6 +1,8 @@
 package com.controllers;
 
 import com.dtos.CommentaireDto;
+import com.dtos.DisplayResponseDto;
+import com.dtos.TableauDto;
 import com.services.CommentaireService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,35 +24,58 @@ public class CommentaireController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentaireDto createCommentaire(@RequestBody CommentaireDto commentaireDto) {
-        return commentaireService.saveCommentaire(commentaireDto);
+    public DisplayResponseDto<CommentaireDto> createCommentaire(@RequestBody CommentaireDto commentaireDto) {
+        DisplayResponseDto<CommentaireDto> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(commentaireService.saveCommentaire(commentaireDto));
+
+        return displayResponseDto;
     }
 
     /**
      * Récupérer un commentaire par ID
      */
     @GetMapping("/{id}")
-    public CommentaireDto getCommentaireById(@PathVariable String id) {
-        return commentaireService.getCommentaireById(id);
+    public DisplayResponseDto<CommentaireDto> getCommentaireById(@PathVariable String id) {
+        DisplayResponseDto<CommentaireDto> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(commentaireService.getCommentaireById(id));
+
+        return displayResponseDto;
     }
 
     /**
      * Récupérer tous les commentaires
      */
     @GetMapping
-    public List<CommentaireDto> getAllCommentaires() {
-        return commentaireService.getAllCommentaires();
+    public DisplayResponseDto<List<CommentaireDto>> getAllCommentaires() {
+        DisplayResponseDto<List<CommentaireDto>> displayResponseDto = new DisplayResponseDto<>();
+
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(commentaireService.getAllCommentaires());
+
+        return displayResponseDto;
     }
 
     /**
      * Modifier un commentaire
      */
     @PatchMapping("/{id}")
-    public CommentaireDto updateCommentaire(
+    public DisplayResponseDto<CommentaireDto> updateCommentaire(
             @PathVariable String id,
             @RequestBody CommentaireDto commentaireDto) {
+        DisplayResponseDto<CommentaireDto> displayResponseDto = new DisplayResponseDto<>();
 
-        return commentaireService.updateCommentaire(id, commentaireDto);
+        displayResponseDto.setMessage("success");
+        displayResponseDto.setType("collection");
+        displayResponseDto.setData(commentaireService.updateCommentaire(id, commentaireDto));
+
+        return displayResponseDto;
     }
 
     /**
