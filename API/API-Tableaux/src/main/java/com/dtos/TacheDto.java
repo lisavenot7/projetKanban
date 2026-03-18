@@ -14,7 +14,7 @@ public class TacheDto {
     private String tchDescription;
     private String tchDateLimite; // format String pour simplifier
     private int tchPriorite;
-    private int tchStatus;
+    private String tchStatus;
 
     private Long compteId;       // compte auquel la tâche est attribuée
     private Long colonneId;      // colonne à laquelle la tâche appartient
