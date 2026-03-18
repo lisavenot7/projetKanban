@@ -63,13 +63,17 @@ async function fetchCreateur(idTab) {
     credentials: "include" 
 });
     if (!response.ok) {
-      console.error("Erreur récupération tableau", response.status)
+      console.error("Erreur récupération créateur", response.status)
       return
     }
     const data = await response.json()
     createur.value = data.data
+    console.log(createur.value)
+    if(createur.value.cptId != Number(idUser)){
+      router.push("/private/tableaux")
+    }
   } catch (err) {
-    console.error("Impossible de récupérer le tableau", err)
+    console.error("Impossible de récupérer le créateur", err)
   }
 }
 
@@ -99,7 +103,6 @@ async function fetchUsers() {
   }
 
   async function valider() {
-    console.log(selectedUsers.value.map(u => u.cptId))
     try {
       const response = await fetch(`http://localhost:10056/tableaux/${idTab}/participants`, {
         method: "PATCH",
@@ -123,6 +126,7 @@ async function fetchUsers() {
   }
 
 const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
 onMounted(() => {
   const admin = localStorage.getItem("isAdmin")
   if (!token) {

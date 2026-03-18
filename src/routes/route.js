@@ -22,6 +22,7 @@ import ColonneModifier from '../vues/ColonneModifier.vue'
 import TacheAjouter from '../vues/TacheAjouter.vue'
 import Tache from '../vues/Tache.vue'
 import TacheModifier from '../vues/TacheModifier.vue'
+import TacheAssigner from '../vues/TacheAssigner.vue'
 import CommentaireAjouter from '../vues/CommentaireAjouter.vue'
 import CommentaireModifier from '../vues/CommentaireModifier.vue'
 
@@ -150,6 +151,11 @@ const routes = [
         path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/modifier',
         name: 'TacheModifier',
         component: TacheModifier,
+        meta: { requiresAuth: true }
+    },{
+        path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/assigner',
+        name: 'TacheAssigner',
+        component: TacheAssigner,
         meta: { requiresAuth: true }
     },{
         path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires/ajouter',

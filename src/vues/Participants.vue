@@ -34,6 +34,7 @@ async function fetchParticipants(idTab) {
     }
     const data = await response.json()
     participants.value = data.data
+    console.log(data.data)
   } catch (err) {
     console.error("Impossible de récupérer le tableau", err)
   }
@@ -61,6 +62,7 @@ async function fetchCreateur(idTab) {
 }
 
 const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
 onMounted(() => {
   const admin = localStorage.getItem("isAdmin")
   if (!token) {
@@ -79,7 +81,7 @@ onMounted(() => {
   <div class="container">
     <div class="box">
       <h1>Liste des participants</h1>
-      <div style="margin-bottom:10px;">
+      <div v-if="Number(idUser)===createur.cptId" style="margin-bottom:10px;">
         <button class="boutonsNav" style="height:40px;" @click="goToGestion">Gestion des participants</button>
       </div>
       <div 

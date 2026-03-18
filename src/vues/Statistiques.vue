@@ -18,6 +18,7 @@ onMounted(() => {
     router.push("/private")
   }
   fetchUsers()
+  fetchTableaux()
 })
 
 async function fetchUsers() {
@@ -47,6 +48,29 @@ async function fetchUsers() {
   }
 }
 
+async function fetchTableaux() {
+  try {
+    const response = await fetch("http://localhost:10056/tableaux", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableaux", response.status)
+      return
+    }
+    const res = await response.json()
+    tableaux.value = res.data
+
+  console.log(tableaux.value.length)
+  } catch (err) {
+    console.error("Impossible de récupérer les tableaux", err)
+  }
+}
+
 const nbComptes = ref('')
 const nbAdmin = ref('')
 const nbUtil = ref('')
@@ -58,15 +82,18 @@ const toggleUserStat = () => {
   showUserStat.value = !showUserStat.value
 }
 
-const nbTableauxUser = 5
-const nbcolonneTableau = 3
-const nbTacheTableau = 45
-const nbTachesTermines = 20
-const nbTachesRetard = 4
-const nbTachesPrioritaire = 2
-const nbTachesAssigné = 10
-const nbUserTab = 4
-const nbCommentaireTache = 7
+const tableaux = ref([])
+const taches = ref([])
+
+const nbTableauxUser = null
+const nbcolonneTableau = null
+const nbTacheTableau = null
+const nbTachesTermines = null
+const nbTachesRetard = null
+const nbTachesPrioritaire = null
+const nbTachesAssigné = null
+const nbUserTab = null
+const nbCommentaireTache = null
 
 const showTabStat = ref(false)
 const toggleTabStat = () => {

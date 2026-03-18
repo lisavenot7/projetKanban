@@ -1,12 +1,9 @@
 <style src="../assets/css/style.css"></style>
 <script setup>
 import Navbar from "../components/NavbarUtilisateur.vue"
-import { useRouter, useRoute } from "vue-router"
-import { ref, computed } from 'vue'
 
-import tabsData from '../bdd/tableaux.json'
-import usersData from '../bdd/users.json'
-import tachesData from '../bdd/taches.json'
+import { useRouter, useRoute } from "vue-router"
+import { ref, computed, onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -15,31 +12,118 @@ const idTableau = Number(route.params.id)
 const idColonne = Number(route.params.idcolonne)
 const idTache = Number(route.params.idtache)
 
-const tache = tachesData.find(t => t.id === idTache) 
+const tache = ref('')
 
-const nom = ref(tache.nom)
-const dateLimite = ref(tache? tache.dateLimite : null)
-const assignéA = ref(tache.utilisateur || "")
-const description = ref(tache.description)
-const prioritaire = ref(Boolean(tache.prioritaire))
-const etat = ref(tache.etat || "")
+const nom = ref("")
+const dateLimite = ref("")
+const assignéA = ref("")
+const description = ref("")
+const prioritaire = ref("")
+const etat = ref("")
 const error = ref("")
 
-const tab = tabsData.find(t => t.id === idTableau) || { participants: [] }
-
-const participants = computed(() => {
-  const pseudos = [tab.createur, ...tab.participants]
-  return usersData.filter(u => pseudos.includes(u.pseudo))
-})
+const participants = ref([])
 
 const annuler = async () => {
   router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
 }
 const valider = async () => {
-  router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
+  if(nom.value==="" ||
+  description.value===""){
+    error.value = "Veuillez remplir les champs nom et description"
+    return
+  }
+  let tache ={
+    tchTitre :nom.value,
+    tchDescription : description.value,
+    tchDateLimite :dateLimite.value,
+    tchPriorite:prioritaire.value ? 1:0,
+    compteId:assignéA.value,
+    colonneId:idColonne,
+    tchStatus: etat.value
+  }
+  try {
+      const response = await fetch(`http://localhost:10056/taches/${idTache}`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tache)
+        
+      })
+      if (!response.ok) {
+        console.error("Erreur modification tache", response.status)
+        return
+      }
+      router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
+
+    } catch (err) {
+      console.error(err)
+      error.value = "Impossible de contacter le serveur"
+  }
+  }
+
+async function fetchTache() {
+  try {
+    const response = await fetch(`http://localhost:10056/taches/${idTache}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    })
+    if (!response.ok) {
+      console.error("Erreur récupération tache", response.status)
+      return
+    }
+    const data = await response.json()
+    tache.value = data.data 
+    nom.value = tache.value.tchTitre
+    dateLimite.value  = tache.value.tchDateLimite
+    assignéA.value  = tache.value.compteId || ""
+    description.value  = tache.value.tchDescription
+    prioritaire.value  = Boolean(tache.value.tchPriorite)
+    etat.value  = tache.value.tchStatus
+  } catch (err) {
+    console.error("Impossible de récupérer la tache", err)
+  }
 }
 
-const admin = ref(false)
+async function fetchParticipants() {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTableau}/participants`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération participants", response.status)
+      return
+    }
+    const data = await response.json()
+    participants.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer les participants", err)
+  }
+}
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchTache()
+  fetchParticipants()
+})
 </script>
 
 <template>
@@ -55,10 +139,10 @@ const admin = ref(false)
       <option value="">Choisir un participant</option>
       <option 
         v-for="user in participants" 
-        :key="user.pseudo" 
-        :value="user.pseudo"
+        :key="user.cptId" 
+        :value="user.cptId"
       >
-        {{ user.prenom }} {{ user.nom }} ({{ user.pseudo }})
+        {{ user.prenom }} {{ user.nom }}
       </option>
     </select>
 

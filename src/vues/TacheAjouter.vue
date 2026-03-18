@@ -2,10 +2,7 @@
 <script setup>
 import Navbar from "../components/NavbarUtilisateur.vue"
 import { useRouter, useRoute } from "vue-router"
-import { ref, computed } from 'vue'
-
-import tabsData from '../bdd/tableaux.json'
-import usersData from '../bdd/users.json'
+import { ref, computed, onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -14,27 +11,107 @@ const idTableau = Number(route.params.id)
 const idColonne = Number(route.params.idcolonne)
 
 const nom = ref("")
-const dateLimite = ref("")
+const dateLimite = ref(null)
 const assignéA = ref("")   
 const description = ref("")
 const prioritaire = ref(false)
 const error = ref("")
 
-const tab = tabsData.find(t => t.id === idTableau) || { participants: [] }
-
-const participants = computed(() => {
-  const pseudos = [tab.createur, ...tab.participants]
-  return usersData.filter(u => pseudos.includes(u.pseudo))
-})
+const participants = ref([])
 
 const annuler = async () => {
   router.push(`/private/tableaux/${idTableau}`)
 }
 const valider = async () => {
-  router.push(`/private/tableaux/${idTableau}`)
+  if(nom.value==="" ||
+  description.value===""){
+    error.value = "Veuillez remplir les champs nom et description"
+    return
+  }
+  let tache ={
+    tchTitre :nom.value,
+    tchDescription : description.value,
+    tchDateLimite :dateLimite.value,
+    tchPriorite:prioritaire.value ? 1:0,
+    compteId:assignéA.value,
+    colonneId:idColonne,
+    tchStatus:"A faire"
+  }
+  try {
+      const response = await fetch(`http://localhost:10056/taches`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tache)
+        
+      })
+      if (!response.ok) {
+        console.error("Erreur création tache", response.status)
+        return
+      }
+      router.push(`/private/tableaux/${idTableau}`)
+    } catch (err) {
+      console.error(err)
+      error.value = "Impossible de contacter le serveur"
+  }
 }
 
-const admin = ref(false)
+async function fetchParticipants() {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTableau}/participants`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération participants", response.status)
+      return
+    }
+    const data = await response.json()
+    participants.value = data.data
+  } catch (err) {
+    console.error("Impossible de récupérer les participants", err)
+  }
+}
+
+async function fetchCreateur() {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTableau}/createur`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération créateur", response.status)
+      return
+    }
+    const data = await response.json()
+    participants.value .push(data.data)
+  } catch (err) {
+    console.error("Impossible de récupérer le créateur", err)
+  }
+}
+
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchParticipants()
+  fetchCreateur()
+})
 </script>
 
 <template>
@@ -45,15 +122,15 @@ const admin = ref(false)
 
     <input v-model="nom" placeholder="Nom" />
 
-    <h3 :style="{ marginTop: '5px' }">Assigné à :</h3>
+    <h3 :style="{ marginTop: '5px' }">Assigné à (facultatif) :</h3>
     <select v-model="assignéA">
       <option value="">Choisir un participant</option>
       <option 
         v-for="user in participants" 
-        :key="user.pseudo" 
-        :value="user.pseudo"
+        :key="user.cptId" 
+        :value="user.cptId"
       >
-        {{ user.prenom }} {{ user.nom }} ({{ user.pseudo }})
+        {{ user.prenom }} {{ user.nom }}
       </option>
     </select>
 

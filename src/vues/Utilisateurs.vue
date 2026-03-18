@@ -70,7 +70,7 @@ async function modifEtat(user) {
 }
 
 async function deleteUser(user) {
-  const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer ce tableau ? Cette action est irréversible !");
+  const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible !");
   if (!confirmed) return;
   try {
     const response = await fetch(`http://localhost:10056/comptes/${user.cptId}`, {
