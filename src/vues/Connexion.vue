@@ -49,7 +49,6 @@ const login = async () => {
     } else {
       router.push("/admin")
     }
-    
   } catch (err) {
     console.error(err)
     error.value = "Impossible de contacter le serveur"

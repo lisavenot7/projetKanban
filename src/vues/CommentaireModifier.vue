@@ -5,8 +5,6 @@ import { useRouter, useRoute } from "vue-router"
 import { ref, computed, onMounted} from 'vue'
 
 
-import comsData from '../bdd/commentaires.json'
-
 const router = useRouter()
 const route = useRoute()
 

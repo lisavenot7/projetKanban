@@ -4,7 +4,6 @@ import Navbar from "../components/NavbarAdmin.vue"
 import { useRouter ,useRoute} from "vue-router"
 import { ref, onMounted } from 'vue'
 
-import usersData from '../bdd/users.json'
 
 const router = useRouter()
 const route = useRoute()
