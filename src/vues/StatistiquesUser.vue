@@ -5,7 +5,6 @@ import Bandeau from "../components/BandeauAdmin.vue"
 
 import StatsChart from '../components/StatsUtilisateur.vue'
 
-import usersData from '../bdd/users.json'
 
 import {ref,computed,onMounted} from 'vue'
 import {useRoute,useRouter} from "vue-router"
@@ -13,15 +12,57 @@ import {useRoute,useRouter} from "vue-router"
 const route = useRoute()
 const router = useRouter()
 
-const pseudoParam = route.params.id
-const user = usersData.find(u => u.pseudo === pseudoParam)
+const idUser = route.params.id
+const user = ref('')
 
-const nbComptes = computed(() => usersData.length)
-const nbAdmin = computed(() => usersData.filter(user => user.isAdmin === 1).length)
-const nbUtil = computed(() => usersData.filter(user => user.isAdmin === 0).length)
-const nbAct = computed(() => usersData.filter(user => user.actif === 1).length)
-const nbDes = computed(() => usersData.filter(user => user.actif === 0).length)
+const nbTab = ref("")
+const nbCom = ref("")
+const nbPar = ref("")
 
+async function fetchUser() {
+  try {
+    const response = await fetch(`http://localhost:10056/comptes/${idUser}`, {
+  method: "GET",
+  headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  },
+  credentials: "include"
+});
+    if (!response.ok) {
+      console.error("Erreur récupération utilisateurs", response.status)
+      return
+    }
+    const res = await response.json()
+    user.value = res.data
+    nbPar.value =user.value.tableauIds.length
+    nbTab.value =user.value.tableauxCrees.length  
+    fetchCommentaires()
+  } catch (err) {
+    console.error("Impossible de récupérer les utilisateurs", err)
+  }
+}
+
+async function fetchCommentaires() {
+  try {
+    const response = await fetch(`http://localhost:10056/comptes/${idUser}/commentaires`, {
+  method: "GET",
+  headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  },
+  credentials: "include"
+});
+    if (!response.ok) {
+      console.error("Erreur récupération commentaires", response.status)
+      return
+    }
+    const res = await response.json()
+    nbCom.value = res.data.length
+  } catch (err) {
+    console.error("Impossible de récupérer les commentaires", err)
+  }
+}
 
 const token = localStorage.getItem("jwtToken")
 onMounted(() => {
@@ -32,6 +73,7 @@ onMounted(() => {
   if (admin === "0") {
     router.push("/private")
   }
+  fetchUser()
 })
 </script>
 
@@ -40,25 +82,25 @@ onMounted(() => {
   <div v-if="user" class="home">
     <br/><br/>
     <h2 style="margin-left:5%;">
-      Statistiques de l'utilisateur {{ user.pseudo }}
+      Statistiques de l'utilisateur {{ user.nom }} {{ user.prenom }}
     </h2>
     <div class="stats-container">
       <div class="chart-wrapper">
-        <StatsChart />
+        <StatsChart :idUtilisateur="user.cptId" />
       </div>
       
       <div class="cards-wrapper">
        
         <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbAct}}</h1></div>
+          <div class="icon-circle"><h1>{{nbTab}}</h1></div>
           <span>Tableaux créés</span>
         </div>
         <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbComptes}}</h1></div>
-          <span>moyenne de commentaire par tâche</span>
+          <div class="icon-circle"><h1>{{nbCom}}</h1></div>
+          <span>Commentaire écrits</span>
         </div>
         <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbDes}}</h1></div>
+          <div class="icon-circle"><h1>{{nbPar}}</h1></div>
           <span>Tableaux où il participe</span>
         </div>
         

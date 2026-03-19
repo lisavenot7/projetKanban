@@ -35,6 +35,10 @@ function goToAssigner() {
     router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}/assigner`)
 }
 
+function goToTableau() {
+    router.push(`/private/tableaux/${idTableau}`)
+}
+
 async function fetchCommentaires() {
   try {
     const response = await fetch(`http://localhost:10056/taches/${idTache}/commentaires`, {
@@ -150,6 +154,9 @@ function handleComSupprimee(comId) {
 <Navbar />
 <div class="container">
   <div class="tache-box">
+  <button class="retour" @click="goToTableau">
+    Retour
+  </button>
     <div v-if="tache!=null">
       <div  class="tableau-header">
         <h1>
@@ -205,7 +212,7 @@ function handleComSupprimee(comId) {
           color:white;">
           {{ tache.tchStatus }}
         </h2>
-        <h2 v-if="today > new Date(tache.tchDateLimite) && tache.tchStatus!=='Terminé'" 
+        <h2 v-if="tache.tchDateLimite!=null &&today > new Date(tache.tchDateLimite) && tache.tchStatus!=='Terminé'" 
           style="background-color:red; 
             width: 15%;text-align:center; 
             border-radius:10px;

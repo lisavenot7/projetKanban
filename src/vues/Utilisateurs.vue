@@ -120,7 +120,7 @@ function goToAjouter() {
   router.push(`/admin/utilisateurs/ajout`)
 }
 function goToStat(user) {
-  router.push(`/admin/utilisateurs/${user.cptPseudo}/statistiques`)
+  router.push(`/admin/utilisateurs/${user.cptId}/statistiques`)
 }
 function changeEtat(user) {
   modifEtat(user)

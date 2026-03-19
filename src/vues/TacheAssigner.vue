@@ -91,6 +91,27 @@ async function fetchParticipants() {
   }
 }
 
+async function fetchCreateur() {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTableau}/createur`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération créateur", response.status)
+      return
+    }
+    const data = await response.json()
+    participants.value .push(data.data)
+  } catch (err) {
+    console.error("Impossible de récupérer le créateur", err)
+  }
+}
+
 const token = localStorage.getItem("jwtToken")
 onMounted(() => {
   const admin = localStorage.getItem("isAdmin")
@@ -102,6 +123,7 @@ onMounted(() => {
   }
   fetchTache()
   fetchParticipants()
+  fetchCreateur()
 })
 </script>
 

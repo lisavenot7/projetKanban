@@ -245,6 +245,7 @@ select {
   color: white;
   font-weight: bold;
   font-size: 18px;
+  text-align:center;
 }
 
 .icon-circle {
@@ -376,6 +377,19 @@ thead {
   width : 150px;
   height:40px;
   margin-left:5%;
+}
+
+.retour {
+  background-color: #CCCCFF;
+  padding: 10px;
+  border: none;
+  color: 0F171E;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size:18px;
+  font-weight: bold;
+  width : 150px;
+  height:40px;
 }
 
 .ajouter {

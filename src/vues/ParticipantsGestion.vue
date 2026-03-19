@@ -93,9 +93,14 @@ async function fetchUsers() {
     }
     const data = await response.json()
     users.value = data.data
+    onlyUtilisateur()
   } catch (err) {
     console.error("Impossible de récupérer les utilisateurs", err)
   }
+}
+
+function onlyUtilisateur() {
+  users.value = users.value.filter(u => u.cptIsAdmin === 0)
 }
 
   const annuler = () => {
@@ -157,7 +162,7 @@ onMounted(() => {
           <select v-model="selectedUsers" multiple>
             <option
               v-for="user in filteredUsers"
-              :key="user.id"
+              :key="user.cptId"
               :value="user"
             >
               {{ user.prenom }} {{ user.nom }} 
@@ -167,7 +172,7 @@ onMounted(() => {
             <span
               class="tag"
               v-for="user in selectedUsers"
-              :key="user.id"
+              :key="user.cptId"
             >
               - {{ user.prenom }} {{ user.nom }}
             </span>
