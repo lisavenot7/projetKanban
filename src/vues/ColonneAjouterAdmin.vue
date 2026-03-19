@@ -1,6 +1,6 @@
 <style src="../assets/css/style.css"></style>
 <script setup>
-import Navbar from "../components/NavbarUtilisateur.vue"
+import Navbar from "../components/NavbarAdmin.vue"
 
 import { useRouter, useRoute} from "vue-router"
 import { ref,onMounted } from 'vue'
@@ -13,10 +13,9 @@ const idTab = Number(route.params.id)
 const nom = ref("")
 const error = ref("")
 
-const createur = ref("")
 
 const annuler = async () => {
-  router.push(`/private/tableaux/${idTab}`)
+  router.push(`/admin/tableaux/${idTab}/colonnes`)
 }
 const valider = async () => {
   if(nom.value===""){
@@ -43,48 +42,22 @@ const valider = async () => {
     }
     const data = await response.json()
     console.log("Colonne créée:", data)
-    router.push(`/private/tableaux/${idTab}`)
+    router.push(`/admin/tableaux/${idTab}/colonnes`)
   } catch (err) {
     console.error(err)
     error.value = "Impossible de contacter le serveur"
   }
 }
 
-async function fetchCreateur() {
-  try {
-    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/createur`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
-    },
-    credentials: "include" 
-});
-    if (!response.ok) {
-      console.error("Erreur récupération créateur", response.status)
-      return
-    }
-    const data = await response.json()
-    createur.value = data.data.cptId
-    if(createur.value != Number(idUser)){
-      router.push("/private/tableaux")
-    }
-  } catch (err) {
-    console.error("Impossible de récupérer le créateur", err)
-  }
-}
-
 const token = localStorage.getItem("jwtToken")
-const idUser = localStorage.getItem("cptId")
 onMounted(() => {
   const admin = localStorage.getItem("isAdmin")
   if (!token) {
     router.push("/connexion")
   }
-  if (admin === "1") {
-    router.push("/admin")
+  if (admin === "0") {
+    router.push("/private")
   }
-  fetchCreateur()
 })
 </script>
 

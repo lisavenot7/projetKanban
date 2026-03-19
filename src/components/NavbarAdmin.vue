@@ -14,6 +14,7 @@ const logout = () => {
     <div class="links">
       <router-link to="/admin">Accueil</router-link>
       <router-link to="/admin/utilisateurs">Utilisateurs</router-link>
+      <router-link to="/admin/tableaux">Tableaux</router-link>
       <router-link to="/admin/statistiques">Statistiques</router-link>
       <router-link to="/admin/profil">Mon profil</router-link>
       <a @click="logout">Déconnexion</a>

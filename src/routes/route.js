@@ -25,6 +25,18 @@ import TacheModifier from '../vues/TacheModifier.vue'
 import TacheAssigner from '../vues/TacheAssigner.vue'
 import CommentaireAjouter from '../vues/CommentaireAjouter.vue'
 import CommentaireModifier from '../vues/CommentaireModifier.vue'
+import TableauxAdmin from '../vues/TableauxAdmin.vue'
+import TableauModifierAdmin from '../vues/TableauModifierAdmin.vue'
+import ParticipantsAdmin from '../vues/ParticipantsAdmin.vue'
+import ParticipantsGestionAdmin from '../vues/ParticipantsGestionAdmin.vue'
+import TableauColonnes from '../vues/TableauColonnes.vue'
+import ColonneAjouterAdmin from '../vues/ColonneAjouterAdmin.vue'
+import ColonneModifierAdmin from '../vues/ColonneModifierAdmin.vue'
+import ColonneTaches from '../vues/ColonneTaches.vue'
+import TacheAjouterAdmin from '../vues/TacheAjouterAdmin.vue'
+import TacheModifierAdmin from '../vues/TacheModifierAdmin.vue'
+import TacheCommentaires from '../vues/TacheCommentaires.vue'
+import CommentaireAjouterAdmin from '../vues/CommentaireAjouterAdmin.vue'
 
 const routes = [
     {
@@ -166,6 +178,66 @@ const routes = [
         path: '/private/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires/:idcom/modifier',
         name: 'CommentaireModifier',
         component: CommentaireModifier,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux',
+        name: 'TableauxAdmin',
+        component: TableauxAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/modifier',
+        name: 'TableauModifierAdmin',
+        component: TableauModifierAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/participants',
+        name: 'ParticipantsAdmin',
+        component: ParticipantsAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/participants/gestion',
+        name: 'ParticipantsGestionAdmin',
+        component: ParticipantsGestionAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes',
+        name: 'TableauColonnes',
+        component: TableauColonnes,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/ajout',
+        name: 'ColonneAjouterAdmin',
+        component: ColonneAjouterAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/modifier',
+        name: 'ColonneModifierAdmin',
+        component: ColonneModifierAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/taches',
+        name: 'ColonneTaches',
+        component: ColonneTaches,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/taches/ajout',
+        name: 'TacheAjouterAdmin',
+        component: TacheAjouterAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/taches/:idtache/modifier',
+        name: 'TacheModifierAdmin',
+        component: TacheModifierAdmin,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires',
+        name: 'TacheCommentaires',
+        component: TacheCommentaires,
+        meta: { requiresAuth: true }
+    },{
+        path: '/admin/tableaux/:id/colonnes/:idcolonne/taches/:idtache/commentaires/ajout',
+        name: 'CommentaireAjouterAdmin',
+        component: CommentaireAjouterAdmin,
         meta: { requiresAuth: true }
     }
 ]

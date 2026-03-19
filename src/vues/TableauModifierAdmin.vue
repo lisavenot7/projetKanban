@@ -1,52 +1,71 @@
 <style src="../assets/css/style.css"></style>
 <script setup>
-import Navbar from "../components/NavbarUtilisateur.vue"
+import Navbar from "../components/NavbarAdmin.vue"
 
 import { useRouter, useRoute} from "vue-router"
 import { ref,onMounted } from 'vue'
+
+import tabsData from '../bdd/tableaux.json'
 
 const router = useRouter()
 const route = useRoute()
 
 const idTab = Number(route.params.id)
-
-const nom = ref("")
-const error = ref("")
+const tab = ref('')
+const nom = ref('')
+const error = ref('')
 
 const createur = ref("")
 
 const annuler = async () => {
-  router.push(`/private/tableaux/${idTab}`)
+  router.push(`/admin/tableaux`)
 }
 const valider = async () => {
-  if(nom.value===""){
-    error.value = "Veuillez remplir le champ"
-    return
-  }
-  const colonne = {
-    clnNom: nom.value,
-    tabId:idTab
-  }
+  let tableau = {
+      tabNom:nom.value
+    }
+
   try {
-    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/colonnes`, {
-      method: "POST",
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}`, {
+      method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(colonne)
+      body: JSON.stringify(tableau)
     })
+    const data = await response.json()
     if (!response.ok) {
-      const data = await response.json()
-      error.value = data.message || "Erreur lors de la création de la colonne"
+      error.value = data.message || "ERREUR LORS DE LA MODIFICATION"
+      return
+    }
+    tab.value = data.data
+    router.push(`/admin/tableaux`)
+  } catch (err) {
+    console.error("Impossible de modifier le tableau", err)
+    error.value = "Erreur serveur"
+  }
+}
+
+async function fetchTab(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
       return
     }
     const data = await response.json()
-    console.log("Colonne créée:", data)
-    router.push(`/private/tableaux/${idTab}`)
+    tab.value = data.data
+    nom.value = tab.value.tabNom
   } catch (err) {
-    console.error(err)
-    error.value = "Impossible de contacter le serveur"
+    console.error("Impossible de récupérer le tableau", err)
   }
 }
 
@@ -66,24 +85,21 @@ async function fetchCreateur() {
     }
     const data = await response.json()
     createur.value = data.data.cptId
-    if(createur.value != Number(idUser)){
-      router.push("/private/tableaux")
-    }
   } catch (err) {
     console.error("Impossible de récupérer le créateur", err)
   }
 }
 
 const token = localStorage.getItem("jwtToken")
-const idUser = localStorage.getItem("cptId")
 onMounted(() => {
   const admin = localStorage.getItem("isAdmin")
   if (!token) {
     router.push("/connexion")
   }
-  if (admin === "1") {
-    router.push("/admin")
+  if (admin === "0") {
+    router.push("/private")
   }
+  fetchTab(idTab)
   fetchCreateur()
 })
 </script>
@@ -92,8 +108,11 @@ onMounted(() => {
 <Navbar />
   <div class="container">
     <div class="box">
-      <h1>Ajouter une colonne </h1>
+      <h1>Modifier un tableau</h1>
       <input v-model="nom" placeholder="Nom" />
+
+        
+      
       <div class="nav">
         <button class="boutonsNav" @click="valider">Valider</button> 
         <button class="boutonsNav" @click="annuler">Annuler</button>

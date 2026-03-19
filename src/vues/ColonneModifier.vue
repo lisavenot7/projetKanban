@@ -23,7 +23,7 @@ const annuler = async () => {
 }
 const valider = async () => {
   if(nom.value===""){
-    error.value = "Veuillez remplir les champs"
+    error.value = "Veuillez remplir le champ"
     return
   }
   let colonne = {

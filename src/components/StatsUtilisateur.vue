@@ -73,7 +73,7 @@ function tachesUser() {
   ).length
   nbTachesAssignéMoy.value = taches.value.filter(
     tache => (tache.tchStatus === "En cours" || tache.tchStatus === "A faire") 
-    && 
+    && (tache.tchDateLimite===null || new Date(tache.tchDateLimite)>= today)
   ).length
   console.log(taches.value)
   console.log(nbTachesAssignéMoy.value)

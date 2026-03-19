@@ -114,7 +114,7 @@ async function fetchTaches() {
     const res = await response.json()
     taches.value = res.data
     nbTaches.value = taches.value.length
-    nbTacheTableau.value=(nbTableaux.value/nbTaches.value).toFixed(2)
+    nbTacheTableau.value=(nbTaches.value/nbTableaux.value).toFixed(2)
   
   } catch (err) {
     console.error("Impossible de récupérer les taches", err)
