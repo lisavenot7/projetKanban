@@ -107,7 +107,7 @@ public class TacheServiceImpl implements TacheService {
         if (tacheDto.getTchDescription() != null) tache.setTchDescription(tacheDto.getTchDescription());
         if (tacheDto.getTchDateLimite() != null) tache.setTchDateLimite(tacheDto.getTchDateLimite());
         tache.setTchPriorite(tacheDto.getTchPriorite());
-        tache.setTchStatus(tacheDto.getTchStatus());
+        if (tacheDto.getTchStatus() != null) tache.setTchStatus(tacheDto.getTchStatus());
 
         // Mettre à jour le compte attribué si fourni
         if (tacheDto.getCompteId() != null) {
