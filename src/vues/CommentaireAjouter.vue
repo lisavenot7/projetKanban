@@ -2,8 +2,7 @@
 <script setup>
 import Navbar from "../components/NavbarUtilisateur.vue"
 import { useRouter, useRoute } from "vue-router"
-import { ref, computed } from 'vue'
-
+import { ref, computed,onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -19,9 +18,53 @@ const annuler = async () => {
   router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
 }
 const valider = async () => {
-  router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
+  if(texte.value==="" ){
+    error.value = "Veuillez remplir le champ "
+    return
+  }
+
+  const today = new Date();
+  const dateOnly = today.toISOString().split("T")[0];
+
+  let com ={
+    contenu :texte.value,
+    datePublication :dateOnly ,
+    cptId :idUser,
+    tchId :idTache
+  }
+  try {
+      const response = await fetch(`http://localhost:10056/commentaires`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(com)
+        
+      })
+      if (!response.ok) {
+        console.error("Erreur création commentaire", response.status)
+        return
+      }
+      router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}`)
+    } catch (err) {
+      console.error(err)
+      error.value = "Impossible de contacter le serveur"
+  }
 }
 
+
+const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+})
 </script>
 
 <template>

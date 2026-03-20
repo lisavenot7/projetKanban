@@ -18,6 +18,7 @@ onMounted(() => {
     router.push("/private")
   }
   fetchUsers()
+  fetchTableaux()
 })
 
 async function fetchUsers() {
@@ -42,8 +43,119 @@ async function fetchUsers() {
     nbUtil.value = users.value.filter(user => user.cptIsAdmin === 0).length
     nbAct.value = users.value.filter(user => user.cptIsActive === 1).length
     nbDes.value = users.value.filter(user => user.cptIsActive === 0).length
+    fetchTabUser()
+    fetchParticipantsStats()
   } catch (err) {
     console.error("Impossible de récupérer les utilisateurs", err)
+  }
+}
+
+async function fetchParticipantsStats() {
+  try {
+    let totalParticipants = 0
+    for (const tab of tableaux.value) {
+      const res = await fetch(`http://localhost:10056/tableaux/${tab.tabId}/participants`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.ok) {
+        console.error("Erreur participants", res.status)
+        continue
+      }
+      const data = await res.json()
+      const nb = data.data.length
+      totalParticipants += nb
+    }
+    nbUserTab.value = tableaux.value.length
+      ? (totalParticipants / tableaux.value.length).toFixed(2)
+      : 0
+
+  } catch (err) {
+    console.error("Erreur stats participants", err)
+  }
+}
+
+async function fetchTableaux() {
+  try {
+    const response = await fetch("http://localhost:10056/tableaux", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableaux", response.status)
+      return
+    }
+    const res = await response.json()
+    tableaux.value = res.data
+    nbTableaux.value = tableaux.value.length
+    fetchTaches()
+  } catch (err) {
+    console.error("Impossible de récupérer les tableaux", err)
+  }
+}
+
+async function fetchTaches() {
+  try {
+    const response = await fetch("http://localhost:10056/taches", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tache", response.status)
+      return
+    }
+    const res = await response.json()
+    taches.value = res.data
+    nbTaches.value = taches.value.length
+    nbTacheTableau.value=(nbTaches.value/nbTableaux.value).toFixed(2)
+  
+  } catch (err) {
+    console.error("Impossible de récupérer les taches", err)
+  }
+}
+
+async function fetchTabUser() {
+  try {
+    let totalTableaux = 0
+    tabParUser.value = []
+
+    for (const user of users.value) {
+      const [creesRes, participesRes] = await Promise.all([
+        fetch(`http://localhost:10056/comptes/${user.cptId}/tableaux/crees`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch(`http://localhost:10056/comptes/${user.cptId}/tableaux/participes`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ])
+
+      const crees = await creesRes.json()
+      const participes = await participesRes.json()
+
+      const nb = crees.data.length + participes.data.length
+
+      totalTableaux += nb
+
+      tabParUser.value.push({
+        userId: user.cptId,
+        nbTableaux: nb
+      })
+    }
+
+    // moyenne de tableaux par utilisateur
+    nbTableauxUser.value = users.value.length
+      ? (totalTableaux / users.value.length).toFixed(2)
+      : 0
+
+  } catch (err) {
+    console.error("Erreur stats tableaux par user", err)
   }
 }
 
@@ -58,15 +170,16 @@ const toggleUserStat = () => {
   showUserStat.value = !showUserStat.value
 }
 
-const nbTableauxUser = 5
-const nbcolonneTableau = 3
-const nbTacheTableau = 45
-const nbTachesTermines = 20
-const nbTachesRetard = 4
-const nbTachesPrioritaire = 2
-const nbTachesAssigné = 10
-const nbUserTab = 4
-const nbCommentaireTache = 7
+const tableaux = ref([])
+const taches = ref([])
+
+const tabParUser = ref([])
+
+const nbTaches = ref("")
+const nbTableaux = ref("")
+const nbTableauxUser = ref(0)
+const nbTacheTableau = ref("")
+const nbUserTab = ref("")
 
 const showTabStat = ref(false)
 const toggleTabStat = () => {
@@ -127,7 +240,7 @@ const toggleTabStat = () => {
         <rect x="10" y="7" width="4" height="6" rx="1.5" fill="currentColor"/>
         <rect x="15" y="7" width="4" height="8" rx="1.5" fill="currentColor"/>
       </svg>
-      Statistiques des tableaux et des tâches (MOYENNE)
+      Statistiques des tableaux et des tâches
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -135,42 +248,24 @@ const toggleTabStat = () => {
     <div v-if="showTabStat" class="stats-container">
       <div class="cards-wrapper-9">
         <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesPrioritaire}}</h1></div>
-          <span>Tâches prioritaires par tableau</span>
+          <div class="icon-circle"><h1>{{nbTableaux}}</h1></div>
+          <span>Nombre de tableaux</span>
         </div>
           <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesRetard}}</h1></div>
-          <span>Tâches en retard par tableau</span>
+          <div class="icon-circle"><h1>{{nbTaches}}</h1></div>
+          <span>Nombre de tâches</span>
         </div>
         <div class="admin-card">
           <div class="icon-circle"><h1>{{nbTacheTableau}}</h1></div>
-          <span>Tâches par tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesTermines}}</h1></div>
-          <span>Tâches terminées par tableau</span>
-        </div>
-       
-        
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbTachesAssigné}}</h1></div>
-          <span>Tâches assigné par utilisateur et tableau</span>
+          <span>Moyenne de tâches par tableau </span>
         </div>
         <div class="admin-card">
           <div class="icon-circle"><h1>{{nbTableauxUser}}</h1></div>
-          <span>Tableaux par utilisateur</span>
+          <span>moyenne de tableaux par utilisateur</span>
         </div>
         <div class="admin-card">
           <div class="icon-circle"><h1>{{nbUserTab}}</h1></div>
-          <span>Participants à un tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbcolonneTableau}}</h1></div>
-          <span>Colonnes par tableau</span>
-        </div>
-        <div class="admin-card">
-          <div class="icon-circle"><h1>{{nbCommentaireTache}}</h1></div>
-          <span>Commentaires par tâches</span>
+          <span>moyenne de participants à un tableau</span>
         </div>
         
       </div>

@@ -7,35 +7,56 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from "vue-router"
 
 const router = useRouter()
-import tabsData from '../bdd/tableaux.json'
 
 const tabs = ref([])
 const search = ref('')
 const filteredTabs = ref([])
 
-const id = "robertD"
-
-function getUserTabs(userId) {
-  return tabsData.filter(
-    tab => tab.createur === userId || tab.participants.includes(userId)
-  )
+async function fetchTabs(idUser) {
+  try {
+    const response = await fetch(`http://localhost:10056/comptes/${idUser}/tableaux`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableaux", response.status)
+      return
+    }
+    const data = await response.json()
+    tabs.value = data.data
+    filteredTabs.value = tabs.value
+  } catch (err) {
+    console.error("Impossible de récupérer les tableaux", err)
+  }
 }
-
-onMounted(() => {
-  tabs.value = getUserTabs(id) 
-  filteredTabs.value = tabs.value
-})
 
 function searchTabs() {
   const query = search.value.toLowerCase()
   filteredTabs.value = tabs.value.filter(
-    tab => tab.titre.toLowerCase().includes(query)
+    tab => tab.tabNom.toLowerCase().includes(query)
   )
 }
 
 function goToAjouter() {
   router.push(`/private/tableaux/ajouter`)
 }
+
+const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchTabs(idUser)
+})
 </script>
 
 <template>

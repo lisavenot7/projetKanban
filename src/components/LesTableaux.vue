@@ -8,7 +8,7 @@ const props = defineProps({
 })
 
 function goToTableau(tab) {
-   router.push(`/private/tableaux/${tab.id}`)
+   router.push(`/private/tableaux/${tab.tabId}`)
 }
 </script>
 
@@ -27,12 +27,12 @@ function goToTableau(tab) {
       <h3
         class="tab-cards"
         v-for="t in tab"
-        :key="t.id"
+        :key="t.tabId"
         @click="goToTableau(t)"
         style="cursor:pointer"
       >
       
-        {{ t.titre }}
+        {{ t.tabNom }}
       </h3>
     </div>
   </div>

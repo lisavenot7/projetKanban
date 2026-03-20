@@ -3,12 +3,9 @@
 <script setup>
 import Navbar from "../components/NavbarUtilisateur.vue"
 import Commentaire from "../components/Commentaire.vue"
-import { useRouter, useRoute } from "vue-router"
-import { ref } from 'vue'
 
-import tabsData from '../bdd/tableaux.json'
-import tachesData from '../bdd/taches.json'
-import commentairesData from '../bdd/commentaires.json'
+import { useRouter, useRoute } from "vue-router"
+import { ref ,onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -17,8 +14,11 @@ const idTableau = Number(route.params.id)
 const idColonne = Number(route.params.idcolonne)
 const idTache = Number(route.params.idtache)
 
-const tache = tachesData.find(t => t.id === idTache) 
-const commentaires = tache ? commentairesData.filter(c => tache.commentaires.includes(c.id)) : []
+const tache = ref('')
+const commentaires = ref([])
+const user = ref('')
+
+const idUtilisateur = ref("")
 
 const menuOpen = ref(false)
 function toggleMenu() {
@@ -31,32 +31,146 @@ function goToNewCom() {
     router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}/commentaires/ajouter`)
 }
 
+function goToAssigner() {
+    router.push(`/private/tableaux/${idTableau}/colonnes/${idColonne}/taches/${idTache}/assigner`)
+}
+
+function goToTableau() {
+    router.push(`/private/tableaux/${idTableau}`)
+}
+
+async function fetchCommentaires() {
+  try {
+    const response = await fetch(`http://localhost:10056/taches/${idTache}/commentaires`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    })
+    if (!response.ok) {
+      console.error("Erreur récupération des commentaires", response.status)
+      return
+    }
+    const data = await response.json()
+    commentaires.value = data.data 
+  } catch (err) {
+    console.error("Impossible de récupérer les commentaires", err)
+  }
+}
+
+async function fetchTache() {
+  try {
+    const response = await fetch(`http://localhost:10056/taches/${idTache}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    })
+    if (!response.ok) {
+      console.error("Erreur récupération tache", response.status)
+      return
+    }
+    const data = await response.json()
+    tache.value = data.data 
+    if(tache.value.compteId!=null){
+      fetchUser(tache.value.compteId)
+    }
+  } catch (err) {
+    console.error("Impossible de récupérer la tache", err)
+  }
+}
+
+async function deleteTache () {
+  const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible !");
+  if (!confirmed) return;
+  try {
+    const response = await fetch(`http://localhost:10056/taches/${idTache}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify() 
+    });
+    if (!response.ok) {
+      console.error("Erreur lors de la suppression", response.status);
+      return;
+    }
+    router.push(`/private/tableaux/${idTableau}`)
+  } catch (err) {
+    console.error("Impossible de supprimer la tâche", err);
+  }
+}
+
+async function fetchUser(idUtilisateur) {
+  try {
+    const response = await fetch(`http://localhost:10056/comptes/${idUtilisateur}`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération utilisateur", response.status)
+      return
+    }
+    const res = await response.json()
+    user.value = res.data
+  } catch (err) {
+    console.error("Impossible de récupérer l'utilisateur'", err)
+  }
+}
 
 const today = new Date();
 today.setHours(0, 0, 0, 0); 
-const dateLimiteDate = new Date(tache.dateLimite);
-dateLimiteDate.setHours(0, 0, 0, 0);
 
+const token = localStorage.getItem("jwtToken")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchTache()
+  fetchCommentaires()
+})
+
+function handleComSupprimee(comId) {
+  commentaires.value = commentaires.value.filter(
+    com => com.id !== comId
+  )
+}
 </script>
 
 <template>
 <Navbar />
 <div class="container">
   <div class="tache-box">
+  <button class="retour" @click="goToTableau">
+    Retour
+  </button>
     <div v-if="tache!=null">
       <div  class="tableau-header">
         <h1>
-          <span v-if="tache.prioritaire === 1">
+          <span v-if="tache.tchPriorite === 1">
             <svg width="30" height="30" viewBox="0 0 24 24">
               <path d="M12 3L1 21h22L12 3z" fill="#e53935"/>
               <rect x="11" y="9" width="2" height="6" fill="white"/>
               <rect x="11" y="17" width="2" height="2" fill="white"/>
             </svg>
           </span>
-          {{ tache.nom }}
-          <span v-if="tache.prioritaire === 1" >
+          {{ tache.tchTitre }}
+          <span v-if="tache.tchPriorite === 1" >
             -
-            <span v-if="tache.prioritaire === 1" style="color:red;">
+            <span v-if="tache.tchPriorite === 1" style="color:red;">
               Prioritaire
             </span>
           </span>
@@ -64,40 +178,41 @@ dateLimiteDate.setHours(0, 0, 0, 0);
         <div class="menu-container">
           <button class="menu-button3" @click.stop="toggleMenu">⋮</button>
           <div v-if="menuOpen" class="menu-dropdown">
-            <p @click="goToModifier">Modifier la tâche</p>
+            <p @click="goToAssigner">Assigner un participant</p>
             <p @click="goToNewCom">Ajouter un commentaire</p>
-            <p>Supprimer la tâche</p>
+            <p @click="goToModifier">Modifier la tâche</p>
+            <p @click="deleteTache">Supprimer la tâche</p>
           </div>
         </div>
       </div>
-      <div v-if="tache.dateLimite!=null">
-        <h2>A finir avant le {{tache.dateLimite}}</h2>
+      <div v-if="tache.tchDateLimite!=null">
+        <h2>A finir avant le {{tache.tchDateLimite}}</h2>
       </div>
       <div>
-        <h2>Assigné à {{tache.utilisateur}}</h2>
-        <p>{{tache.description}}</p>
-        <h2 v-if="tache.etat==='Terminé'" 
+        <h2>Assigné à {{user.nom}} {{user.prenom}}</h2>
+        <p>{{tache.tchDescription}}</p>
+        <h2 v-if="tache.tchStatus==='Terminé'" 
           style="background-color:green; 
             width: 15%;text-align:center; 
             border-radius:10px;
             color:white;">
-          {{ tache.etat }}
+          {{ tache.tchStatus }}
         </h2>
-        <h2 v-else-if="tache.etat==='En cours'" 
+        <h2 v-else-if="tache.tchStatus==='En cours'" 
           style="background-color:orange; 
             width: 15%;text-align:center; 
             border-radius:10px;
             color:white;">
-          {{ tache.etat }}
+          {{ tache.tchStatus }}
         </h2>
         <h2 v-else 
           style="background-color:black; 
           width: 15%;text-align:center; 
           border-radius:10px;
           color:white;">
-          {{ tache.etat }}
+          {{ tache.tchStatus }}
         </h2>
-        <h2 v-if="today>dateLimiteDate && tache.etat!=='Terminé'" 
+        <h2 v-if="tache.tchDateLimite!=null &&today > new Date(tache.tchDateLimite) && tache.tchStatus!=='Terminé'" 
           style="background-color:red; 
             width: 15%;text-align:center; 
             border-radius:10px;
@@ -107,8 +222,8 @@ dateLimiteDate.setHours(0, 0, 0, 0);
       </div>
       <div class="com-box">
         <div style="margin-left:5%;">
-          <h2>Commentaires ({{ tache.commentaires.length}})</h2>
-          <Commentaire v-if="commentaires.length > 0" :commentaires="commentaires"/>
+          <h2>Commentaires ({{commentaires.length}})</h2>
+          <Commentaire v-if="commentaires.length > 0" :commentaires="commentaires" @comSupprimee="handleComSupprimee"/>
             
           <p v-else style="margin-left:5%;">Aucun commentaire pour cette tâche</p>
         </div>

@@ -3,27 +3,108 @@
 import Navbar from "../components/NavbarUtilisateur.vue"
 
 import { useRouter, useRoute} from "vue-router"
-import { ref} from 'vue'
+import { ref,onMounted } from 'vue'
 
-import tabsData from '../bdd/tableaux.json'
 
 const router = useRouter()
 const route = useRoute()
 
-const idParam = Number(route.params.id)
-const tab = tabsData.find(t => t.id === idParam)
+const idTab = Number(route.params.id)
+const tab = ref('')
+const nom = ref('')
+const error = ref('')
 
-const nom = ref(tab.titre)
-
+const createur = ref("")
 
 const annuler = async () => {
   router.push(`/private/tableaux/${tab.id}`)
 }
 const valider = async () => {
-  
-  router.push(`/private/tableaux/${tab.id}`)
+  let tableau = {
+      tabNom:nom.value
+    }
+
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tableau)
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      error.value = data.message || "ERREUR LORS DE LA MODIFICATION"
+      return
+    }
+    tab.value = data.data
+    router.push(`/private/tableaux/${idTab}`)
+  } catch (err) {
+    console.error("Impossible de modifier le tableau", err)
+    error.value = "Erreur serveur"
+  }
 }
 
+async function fetchTab(idTab) {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération tableau", response.status)
+      return
+    }
+    const data = await response.json()
+    tab.value = data.data
+    nom.value = tab.value.tabNom
+  } catch (err) {
+    console.error("Impossible de récupérer le tableau", err)
+  }
+}
+
+async function fetchCreateur() {
+  try {
+    const response = await fetch(`http://localhost:10056/tableaux/${idTab}/createur`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    credentials: "include" 
+});
+    if (!response.ok) {
+      console.error("Erreur récupération créateur", response.status)
+      return
+    }
+    const data = await response.json()
+    createur.value = data.data.cptId
+    if(createur.value != Number(idUser)){
+      router.push("/private/tableaux")
+    }
+  } catch (err) {
+    console.error("Impossible de récupérer le créateur", err)
+  }
+}
+
+const token = localStorage.getItem("jwtToken")
+const idUser = localStorage.getItem("cptId")
+onMounted(() => {
+  const admin = localStorage.getItem("isAdmin")
+  if (!token) {
+    router.push("/connexion")
+  }
+  if (admin === "1") {
+    router.push("/admin")
+  }
+  fetchTab(idTab)
+  fetchCreateur()
+})
 </script>
 
 <template>
